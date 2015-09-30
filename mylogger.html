@@ -1,69 +1,89 @@
-Instruction to use the bot:
+<p>Instruction to use the bot:</p>
 
-* How do I add some info?
+<ul>
+<li>How do I add some info?</li>
+</ul>
 
-Movie: Inception
-Movie is the tag and Inception is info, colon is the separator.
+<p>Movie: Inception
+Movie is the tag and Inception is info, colon is the separator.</p>
 
-* How do I add new tag?
+<ul>
+<li>How do I add new tag?</li>
+</ul>
 
-You don’t add tags separately. Just send message like above example, the left part of info becomes tag.
+<p>You don’t add tags separately. Just send message like above example, the left part of info becomes tag.</p>
 
-* Is tag case sensitive?
+<ul>
+<li>Is tag case sensitive?</li>
+</ul>
 
-No, it is not. So adding the same named tag in a different case will be considered as ONE tag and not different tags
+<p>No, it is not. So adding the same named tag in a different case will be considered as ONE tag and not different tags</p>
 
-* How do I see what I have already added?
+<ul>
+<li>How do I see what I have already added?</li>
+</ul>
 
-Just send L to list all. And L <tagname> to see info tagged to given tag name.
+<p>Just send L to list all. And L  to see info tagged to given tag name.</p>
 
-e.g L will give me all info added but
-L movie will give me only info added to movie tag.
+<p>e.g L will give me all info added but
+L movie will give me only info added to movie tag.</p>
 
-* Why do I see only recent 11 items?
+<ul>
+<li>Why do I see only recent 11 items?</li>
+</ul>
 
-To make the message more readable by default we get recent 11 info. You can get more using below command.
+<p>To make the message more readable by default we get recent 11 info. You can get more using below command.</p>
 
-L -L30 will give recent 30 info, like this you can give any number.
+<p>L -L30 will give recent 30 info, like this you can give any number.</p>
 
-* How do I undo what I have recently added?
+<ul>
+<li>How do I undo what I have recently added?</li>
+</ul>
 
-just send Undo, but you can not redo.
+<p>just send Undo, but you can not redo.</p>
 
-* How do I see all my tags?
+<ul>
+<li>How do I see all my tags?</li>
+</ul>
 
-tags
+<p>tags</p>
 
-* In a list of info something is not relevant any more, how do I archive it?
+<ul>
+<li>In a list of info something is not relevant any more, how do I archive it?</li>
+</ul>
 
-This will be in 2 steps
+<p>This will be in 2 steps</p>
 
-1st list the info by L command
+<p>1st list the info by L command</p>
 
-2nd send 
+<p>2nd send </p>
 
-Done -L index of that info
+<p>Done -L index of that info</p>
 
-* How do I delete some info?
+<ul>
+<li>How do I delete some info?</li>
+</ul>
 
-This also in 2 steps. This can not be undone.
+<p>This also in 2 steps. This can not be undone.</p>
 
-1st list the info by L command
+<p>1st list the info by L command</p>
 
-2nd send 
+<p>2nd send </p>
 
-Delete -L index of that info
+<p>Delete -L index of that info</p>
 
-* What are options available in List(L) command?
+<ul>
+<li>What are options available in List(L) command?</li>
+</ul>
 
-tag: Show info belongs to only that tag
+<p>tag: Show info belongs to only that tag</p>
 
--l number : To list that many number of info
+<p>-l number : To list that many number of info</p>
 
--t : to show the tag it belongs to
+<p>-t : to show the tag it belongs to</p>
 
--d: shows the date it was added
+<p>-d: shows the date it was added</p>
 
--a: shows info including the ones archived
+<p>-a: shows info including the ones archived</p>
 
--w text : To do a wildcard search of “text” on all info, when you don’t remember the tag. e.g L -w inception
+<p>-w text : To do a wildcard search of “text” on all info, when you don’t remember the tag. e.g L -w inception</p>
