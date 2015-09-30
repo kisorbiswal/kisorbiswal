@@ -1,0 +1,69 @@
+Instruction to use the bot:
+
+* How do I add some info?
+
+Movie: Inception
+Movie is the tag and Inception is info, colon is the separator.
+
+* How do I add new tag?
+
+You don’t add tags separately. Just send message like above example, the left part of info becomes tag.
+
+* Is tag case sensitive?
+
+No, it is not. So adding the same named tag in a different case will be considered as ONE tag and not different tags
+
+* How do I see what I have already added?
+
+Just send L to list all. And L <tagname> to see info tagged to given tag name.
+
+e.g L will give me all info added but
+L movie will give me only info added to movie tag.
+
+* Why do I see only recent 11 items?
+
+To make the message more readable by default we get recent 11 info. You can get more using below command.
+
+L -L30 will give recent 30 info, like this you can give any number.
+
+* How do I undo what I have recently added?
+
+just send Undo, but you can not redo.
+
+* How do I see all my tags?
+
+tags
+
+* In a list of info something is not relevant any more, how do I archive it?
+
+This will be in 2 steps
+
+1st list the info by L command
+
+2nd send 
+
+Done -L index of that info
+
+* How do I delete some info?
+
+This also in 2 steps. This can not be undone.
+
+1st list the info by L command
+
+2nd send 
+
+Delete -L index of that info
+
+* What are options available in List(L) command?
+
+tag: Show info belongs to only that tag
+
+-l number : To list that many number of info
+
+-t : to show the tag it belongs to
+
+-d: shows the date it was added
+
+-a: shows info including the ones archived
+
+-w text : To do a wildcard search of “text” on all info, when you don’t remember the tag. e.g L -w inception
