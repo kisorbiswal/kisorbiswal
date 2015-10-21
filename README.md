@@ -1,2 +1,2 @@
 # kisorbiswal.github.io
-Personal Website of The great Kisor Biswal :smiley:
+Personal website of the great Kisor Biswal :smiley:
