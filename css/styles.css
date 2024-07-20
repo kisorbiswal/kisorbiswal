@@ -5,11 +5,13 @@ body {
     margin: 0;
     padding: 0;
 }
+
 .container {
     width: 80%;
     margin: auto;
     overflow: hidden;
 }
+
 header {
     background: #35424a;
     color: #ffffff;
@@ -17,37 +19,46 @@ header {
     min-height: 70px;
     border-bottom: #e8491d 3px solid;
 }
+
 header a {
     color: #ffffff;
     text-decoration: none;
     text-transform: uppercase;
     font-size: 16px;
 }
+
 header ul {
     padding: 0;
     list-style: none;
 }
+
 header li {
     display: inline;
     padding: 0 20px 0 20px;
 }
+
 header #branding {
     float: left;
 }
+
 header #branding h1 {
     margin: 0;
 }
+
 header nav {
     float: right;
     margin-top: 10px;
 }
+
 section {
     padding: 20px;
     margin-top: 20px;
 }
+
 section h1 {
     text-align: center;
 }
+
 footer {
     background: #35424a;
     color: #ffffff;
@@ -55,13 +66,49 @@ footer {
     padding: 20px 0;
     margin-top: 20px;
 }
+
 footer a {
     color: #ffffff;
     text-decoration: none;
     margin: 0 10px;
 }
+
+#gr_updates_widget {
+    border-radius: 5px;
+    background-color: #fff;
+    border: solid #683205 10px;
+    box-shadow: 0px 0px 4px 1px #595959, inset 0px 0px 0px 1px #7d730b;
+    padding: 15px;
+    width: 100%;
+    max-width: 250px;
+    margin: 20px auto;
+}
+
+#gr_footer {
+    margin-bottom: 0px;
+    height: 30px;
+}
+
+#gr_updates_widget p {
+    padding: 0px;
+    margin: 0;
+    font-size: 14px;
+}
+
+#gr_footer img {
+    width: 100px;
+    float: left;
+}
+
 @media (min-width: 768px) {
-    .gr_custom_title_ {
-        font-size: 1.2em;
+    .flex-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .flex-item {
+        flex: 1;
+        margin: 10px;
     }
 }
