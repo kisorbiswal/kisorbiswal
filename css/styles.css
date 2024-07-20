@@ -95,7 +95,7 @@ footer a {
 
 #gr_updates_widget iframe {
     width: 100%;
-    height: 700px; /* Set a fixed height */
+    height: 600px; /* Set a fixed height */
     border: none;
     overflow: auto;
 }
@@ -108,5 +108,11 @@ footer a {
 @media (min-width: 768px) {
     .flex-container {
         justify-content: space-around;
+    }
+}
+
+@media (min-width: 1024px) {
+    #social p {
+        text-align: center;
     }
 }
