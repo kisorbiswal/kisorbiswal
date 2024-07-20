@@ -9,6 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Load Goodreads widgets
-    // loadHTML('widgets/currently-reading.html', 'currently-reading');
+    loadHTML('widgets/currently-reading.html', 'currently-reading');
     loadHTML('widgets/read.html', 'read');
 });

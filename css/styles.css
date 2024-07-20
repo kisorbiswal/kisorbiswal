@@ -73,6 +73,21 @@ footer a {
     margin: 0 10px;
 }
 
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.flex-item {
+    flex: 1;
+    min-width: 250px;
+    max-width: 300px;
+    margin: 10px;
+    box-sizing: border-box;
+}
+
 #gr_updates_widget {
     border-radius: 5px;
     background-color: #fff;
@@ -80,8 +95,6 @@ footer a {
     box-shadow: 0px 0px 4px 1px #595959, inset 0px 0px 0px 1px #7d730b;
     padding: 15px;
     width: 100%;
-    max-width: 250px;
-    margin: 20px auto;
 }
 
 #gr_footer {
@@ -102,13 +115,6 @@ footer a {
 
 @media (min-width: 768px) {
     .flex-container {
-        display: flex;
         justify-content: space-between;
-        align-items: flex-start;
-    }
-
-    .flex-item {
-        flex: 1;
-        margin: 10px;
     }
 }
