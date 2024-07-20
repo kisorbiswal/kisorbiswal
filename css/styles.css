@@ -93,11 +93,11 @@ footer a {
     padding: 15px;
 }
 
-#gr_updates_widget iframe {
+/*#gr_updates_widget iframe {
     width: 100%;
     height: 365px;
     border: none;
-}
+}*/
 
 #gr_footer {
     margin-bottom: 0px;
