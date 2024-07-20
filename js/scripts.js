@@ -1,13 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
-    function loadHTML(url, elementId) {
-        fetch(url)
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById(elementId).innerHTML = data;
-            })
-            .catch(error => console.error('Error loading HTML:', error));
+    function resizeIframe(iframe) {
+        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
     }
 
-    // Load Goodreads widget
-    // loadHTML('widgets/read.html', 'read');
+    var iframe = document.getElementById('the_iframe');
+    iframe.onload = function() {
+        resizeIframe(iframe);
+    };
 });
