@@ -60,3 +60,9 @@ footer a {
     text-decoration: none;
     margin: 0 10px;
 }
+@media (min-width: 768px) {
+    .gr_custom_title_1721467431,
+    .gr_custom_title_1721471531 {
+        font-size: 1.2em;
+    }
+}
