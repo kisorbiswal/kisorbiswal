@@ -48,11 +48,11 @@
             float: right;
             margin-top: 10px;
         }
-        section#about {
+        section {
             padding: 20px;
             margin-top: 20px;
         }
-        section#about h1 {
+        section h1 {
             text-align: center;
         }
         footer {
@@ -82,6 +82,7 @@
                 <ul>
                     <li><a href="#about">About Me</a></li>
                     <li><a href="#social">Connect</a></li>
+                    <li><a href="#books">Books</a></li>
                 </ul>
             </nav>
         </div>
@@ -103,6 +104,19 @@
         </p>
     </section>
 
+    <section id="books" class="container">
+        <h1>Books</h1>
+        <h2>Currently Reading</h2>
+        <div id="gr_currently_reading_widget">
+            <iframe id="the_iframe" src="https://www.goodreads.com/review/custom_widget/11507516-kisor.Currently Reading?cover_position=left&cover_size=medium&num_books=5&order=d&shelf=currently-reading&show_author=1&show_cover=1&show_rating=1&show_review=1&show_tags=1&show_title=1&sort=date_updated&widget_id=YOUR_WIDGET_ID" width="565" height="400" frameborder="0"></iframe>
+        </div>
+
+        <h2>Books I've Read</h2>
+        <div id="gr_books_widget">
+            <iframe id="the_iframe" src="https://www.goodreads.com/review/custom_widget/11507516-kisor.Read?cover_position=left&cover_size=medium&num_books=5&order=d&shelf=read&show_author=1&show_cover=1&show_rating=1&show_review=1&show_tags=1&show_title=1&sort=date_read&widget_id=YOUR_WIDGET_ID" width="565" height="400" frameborder="0"></iframe>
+        </div>
+    </section>
+
     <footer>
         <p>Connect with me on social media for more updates and insights.</p>
         <a href="https://www.linkedin.com/in/kisor/" target="_blank">LinkedIn</a>
@@ -111,4 +125,3 @@
     </footer>
 </body>
 </html>
-
