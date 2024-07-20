@@ -15,8 +15,7 @@ body {
 header {
     background: #35424a;
     color: #ffffff;
-    padding-top: 30px;
-    min-height: 70px;
+    padding: 20px 0;
     border-bottom: #e8491d 3px solid;
 }
 
@@ -30,11 +29,13 @@ header a {
 header ul {
     padding: 0;
     list-style: none;
+    display: flex;
+    justify-content: space-around;
 }
 
 header li {
     display: inline;
-    padding: 0 20px 0 20px;
+    padding: 0 10px;
 }
 
 header #branding {
@@ -108,6 +109,31 @@ footer a {
 @media (min-width: 768px) {
     .flex-container {
         justify-content: space-around;
+    }
+}
+
+@media (max-width: 767px) {
+    header nav {
+        float: none;
+        text-align: center;
+    }
+
+    header ul {
+        flex-direction: column;
+        padding: 0;
+    }
+
+    header li {
+        padding: 10px 0;
+    }
+
+    .container {
+        width: 100%;
+        padding: 0 10px;
+    }
+
+    #social p {
+        text-align: center;
     }
 }
 
