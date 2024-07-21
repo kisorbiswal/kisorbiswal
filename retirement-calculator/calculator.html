@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retirement Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="scripts.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div id="branding">
+                <h1>Kisor Biswal's Retirement Calculator</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="#calculator">Calculator</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="calculator" class="container">
+        <h1>Retirement Calculator</h1>
+        <form onsubmit="event.preventDefault(); calculateRetirement();">
+            <div>
+                <label for="entryDate">Job Start Date:</label>
+                <input type="date" id="entryDate" value="${new Date().toISOString().substring(0, 10)}" required>
+            </div>
+            <div>
+                <label for="exitDate">Exit Date:</label>
+                <input type="date" id="exitDate" value="${new Date(new Date().setFullYear(new Date().getFullYear() + 30)).toISOString().substring(0, 10)}" required>
+            </div>
+            <div>
+                <label for="currentSalary">Current Salary:</label>
+                <input type="number" id="currentSalary" value="15000" required>
+            </div>
+            <div>
+                <label for="growthRate">Growth Rate (%):</label>
+                <input type="number" id="growthRate" value="4" step="0.01" required>
+            </div>
+            <div>
+                <label for="inflationRate">Inflation Rate (%):</label>
+                <input type="number" id="inflationRate" value="4" step="0.01" required>
+            </div>
+            <div>
+                <label for="pfContribution">Contribution to PF (%):</label>
+                <input type="number" id="pfContribution" value="12" step="0.01" required>
+            </div>
+            <div>
+                <label for="pfReturn">PF Return Rate (%):</label>
+                <input type="number" id="pfReturn" value="8.25" step="0.01" required>
+            </div>
+            <div>
+                <label for="npsContribution">Monthly Contribution to NPS:</label>
+                <input type="number" id="npsContribution" value="0" required>
+            </div>
+            <div>
+                <label for="npsReturn">NPS Return Rate (%):</label>
+                <input type="number" id="npsReturn" value="12" step="0.01" required>
+            </div>
+            <div>
+                <label for="npsAnnuity">NPS Annuity (%):</label>
+                <input type="number" id="npsAnnuity" value="40" step="0.01" required>
+            </div>
+            <div>
+                <label for="annuityReturn">Annuity Return Rate (%):</label>
+                <input type="number" id="annuityReturn" value="6" step="0.01" required>
+            </div>
+            <div>
+                <label for="currentPfBalance">Current Balance in PF:</label>
+                <input type="number" id="currentPfBalance" value="0" required>
+            </div>
+            <div>
+                <label for="monthlyOtherInvestment">Monthly Other Investment:</label>
+                <input type="number" id="monthlyOtherInvestment" value="0" required>
+            </div>
+            <div>
+                <label for="otherReturn">Other Investment Return Rate (%):</label>
+                <input type="number" id="otherReturn" value="0" step="0.01" required>
+            </div>
+            <div>
+                <label for="currentExpense">Current Monthly Expense:</label>
+                <input type="number" id="currentExpense" value="70000" required>
+            </div>
+            <div>
+                <label for="expenseFactor">Expense Factor after Retirement:</label>
+                <input type="number" id="expenseFactor" value="1" step="0.01" required>
+            </div>
+            <button type="submit">Calculate</button>
+        </form>
+        <div id="result"></div>
+        <div id="debug"></div>
+    </section>
+
+    <footer>
+        <p>Connect with me on social media for more updates and insights.</p>
+        <a href="https://www.linkedin.com/in/kisor/" target="_blank">LinkedIn</a>
+        <a href="https://www.facebook.com/kisorbiswal" target="_blank">Facebook</a>
+        <a href="https://www.instagram.com/kisorbiswal" target="_blank">Instagram</a>
+    </footer>
+</body>
+</html>

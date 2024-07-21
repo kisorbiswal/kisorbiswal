@@ -7,12 +7,21 @@ function calculateYearsOfService(entryDate, exitDate) {
 function calculateLast60MonthsSalary(currentSalary, growthRate) {
     let salaries = [];
     for (let n = 0; n < 60; n++) {
-        let monthSalary = currentSalary * Math.pow(1 + growthRate / 100, -n / 12);
+        let monthSalary;
+        if (growthRate === 0) {
+            monthSalary = currentSalary;
+        } else {
+            monthSalary = currentSalary * Math.pow(1 + growthRate / 100, -n / 12);
+        }
         monthSalary = Math.min(monthSalary, 15000); // Cap at 15000
         salaries.push(monthSalary);
     }
     const totalSalary = salaries.reduce((acc, salary) => acc + salary, 0);
     return totalSalary / 60;
+}
+
+function calculatePensionableSalary(currentSalary, growthRate) {
+    return calculateLast60MonthsSalary(currentSalary, growthRate);
 }
 
 function calculatePresentValue(futureValue, inflationRate, years) {
@@ -26,19 +35,29 @@ function calculateFutureValue(currentBalance, monthlyContribution, annualRate, y
     return currentBalance * Math.pow(1 + quarterlyRate, totalQuarters) + quarterlyContribution * ((Math.pow(1 + quarterlyRate, totalQuarters) - 1) / quarterlyRate);
 }
 
-function calculatePensionableSalary(currentSalary, growthRate) {
-    return calculateLast60MonthsSalary(currentSalary, growthRate);
+function calculateSalaryGrowth(currentSalary, growthRate, years) {
+    return currentSalary * Math.pow(1 + growthRate / 100, years);
 }
 
-function calculatePfPensionFund(currentSalary, pfReturn, yearsOfService) {
-    const monthlyEPSContribution = Math.min(currentSalary, 15000) * 0.0833;
-    return Math.ceil(calculateFutureValue(0, monthlyEPSContribution, pfReturn, yearsOfService));
+function calculatePfPensionFund(currentSalary, pfReturn, yearsOfService, growthRate) {
+    let accumulatedPfPensionFund = 0;
+    for (let year = 0; year < yearsOfService; year++) {
+        const salary = calculateSalaryGrowth(currentSalary, growthRate, year);
+        const monthlyEPSContribution = Math.min(salary, 15000) * 0.0833;
+        accumulatedPfPensionFund = calculateFutureValue(accumulatedPfPensionFund, monthlyEPSContribution, pfReturn, 1);
+    }
+    return Math.ceil(accumulatedPfPensionFund);
 }
 
-function calculatePfCorpus(currentSalary, pfContribution, currentPfBalance, pfReturn, yearsOfService) {
-    const monthlyEPSContribution = Math.min(currentSalary, 15000) * 0.0833;
-    const monthlyPFContribution = currentSalary * pfContribution * 2 - monthlyEPSContribution; // Employee and Employer contribution minus EPS
-    return Math.ceil(calculateFutureValue(currentPfBalance, monthlyPFContribution, pfReturn, yearsOfService));
+function calculatePfCorpus(currentSalary, pfContribution, currentPfBalance, pfReturn, yearsOfService, growthRate) {
+    let accumulatedPfCorpus = currentPfBalance;
+    for (let year = 0; year < yearsOfService; year++) {
+        const salary = calculateSalaryGrowth(currentSalary, growthRate, year);
+        const monthlyEPSContribution = Math.min(salary, 15000) * 0.0833;
+        const monthlyPFContribution = salary * pfContribution * 2 - monthlyEPSContribution;
+        accumulatedPfCorpus = calculateFutureValue(accumulatedPfCorpus, monthlyPFContribution, pfReturn, 1);
+    }
+    return Math.ceil(accumulatedPfCorpus);
 }
 
 function calculateEpsPension(pensionableSalary, yearsOfService) {
@@ -93,8 +112,8 @@ function calculateRetirement() {
 
     const yearsOfService = calculateYearsOfService(entryDate, exitDate);
     const pensionableSalary = calculatePensionableSalary(currentSalary, growthRate);
-    const pfPensionFund = calculatePfPensionFund(currentSalary, pfReturn, yearsOfService);
-    const pfCorpus = calculatePfCorpus(currentSalary, pfContribution, currentPfBalance, pfReturn, yearsOfService);
+    const pfPensionFund = calculatePfPensionFund(currentSalary, pfReturn, yearsOfService, growthRate);
+    const pfCorpus = calculatePfCorpus(currentSalary, pfContribution, currentPfBalance, pfReturn, yearsOfService, growthRate);
     const epsPension = calculateEpsPension(pensionableSalary, yearsOfService);
     const npsCorpus = calculateNpsCorpus(npsContribution, npsReturn, yearsOfService);
     const npsAnnuityCorpus = Math.ceil(npsCorpus * npsAnnuity);
