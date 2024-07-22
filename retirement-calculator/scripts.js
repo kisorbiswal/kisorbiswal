@@ -28,11 +28,8 @@ function calculatePresentValue(futureValue, inflationRate, years) {
     return futureValue / Math.pow(1 + inflationRate / 100, years);
 }
 
-function calculateFutureValue(currentBalance, monthlyContribution, annualRate, years) {
-    const quarterlyRate = annualRate / 4 / 100;
-    const totalQuarters = years * 4;
-    const quarterlyContribution = monthlyContribution * 3;
-    return currentBalance * Math.pow(1 + quarterlyRate, totalQuarters) + quarterlyContribution * ((Math.pow(1 + quarterlyRate, totalQuarters) - 1) / quarterlyRate);
+function calculateFutureValue(currentBalance, annualContribution, annualRate, years) {
+    return currentBalance * Math.pow(1 + annualRate / 100, years) + annualContribution * ((Math.pow(1 + annualRate / 100, years) - 1) / (annualRate / 100));
 }
 
 function calculateSalaryGrowth(currentSalary, growthRate, years) {
@@ -44,18 +41,18 @@ function calculatePfPensionFund(currentSalary, pfReturn, yearsOfService, growthR
     for (let year = 0; year < yearsOfService; year++) {
         const salary = calculateSalaryGrowth(currentSalary, growthRate, year);
         const monthlyEPSContribution = Math.min(salary, 15000) * 0.0833;
-        accumulatedPfPensionFund = calculateFutureValue(accumulatedPfPensionFund, monthlyEPSContribution, pfReturn, 1);
+        accumulatedPfPensionFund = calculateFutureValue(accumulatedPfPensionFund, monthlyEPSContribution * 12, pfReturn, 1);
     }
     return Math.ceil(accumulatedPfPensionFund);
 }
 
 function calculatePfCorpus(currentSalary, pfContribution, currentPfBalance, pfReturn, yearsOfService, growthRate) {
-    let accumulatedPfCorpus = currentPfBalance;
+    let accumulatedPfCorpus = currentPfBalance || 0;
     for (let year = 0; year < yearsOfService; year++) {
         const salary = calculateSalaryGrowth(currentSalary, growthRate, year);
         const monthlyEPSContribution = Math.min(salary, 15000) * 0.0833;
         const monthlyPFContribution = salary * pfContribution * 2 - monthlyEPSContribution;
-        accumulatedPfCorpus = calculateFutureValue(accumulatedPfCorpus, monthlyPFContribution, pfReturn, 1);
+        accumulatedPfCorpus = calculateFutureValue(accumulatedPfCorpus, monthlyPFContribution * 12, pfReturn, 1);
     }
     return Math.ceil(accumulatedPfCorpus);
 }
@@ -65,15 +62,18 @@ function calculateEpsPension(pensionableSalary, yearsOfService) {
 }
 
 function calculateNpsCorpus(npsContribution, npsReturn, yearsOfService) {
-    return Math.ceil(calculateFutureValue(0, npsContribution, npsReturn, yearsOfService));
+    return Math.ceil(calculateFutureValue(0, npsContribution * 12, npsReturn, yearsOfService));
 }
 
 function calculateNpsPension(npsAnnuityCorpus, annuityReturn) {
-    return Math.ceil(npsAnnuityCorpus * annuityReturn / 12);
+    return Math.ceil(npsAnnuityCorpus * (annuityReturn / 100) / 12);
 }
 
 function calculateOtherInvestmentCorpus(monthlyOtherInvestment, otherReturn, yearsOfService) {
-    return Math.ceil(calculateFutureValue(0, monthlyOtherInvestment, otherReturn, yearsOfService));
+    if (monthlyOtherInvestment === 0 || otherReturn === 0 || yearsOfService === 0) {
+        return 0;
+    }
+    return Math.ceil(calculateFutureValue(0, monthlyOtherInvestment * 12, otherReturn, yearsOfService));
 }
 
 function calculateRequiredMonthlyExpense(currentExpense, inflationRate, yearsOfService, expenseFactor) {
@@ -81,11 +81,27 @@ function calculateRequiredMonthlyExpense(currentExpense, inflationRate, yearsOfS
     return Math.ceil(futureExpense * expenseFactor);
 }
 
-function calculateRequiredNpsInvestment(shortageInPension, npsReturn, yearsOfService) {
-    if (shortageInPension > 0) {
-        return Math.ceil((shortageInPension * 12 * (Math.pow(1 + npsReturn / 12 / 100, yearsOfService * 12) - 1)) / (npsReturn / 12 / 100 * Math.pow(1 + npsReturn / 12 / 100, yearsOfService * 12)));
-    }
-    return 0;
+function calculateRequiredNpsInvestment(shortageInPension, annuityReturn, npsReturn, yearsOfService) {
+    const targetAmount = (shortageInPension * 12) / (annuityReturn / 100);
+    
+    return calculateMonthlyInvestment(targetAmount, yearsOfService, npsReturn);
+}
+
+function calculateMonthlyInvestment(targetAmount, years, annualInterestRate) {
+    // Convert annual interest rate from percentage to decimal
+    const r = annualInterestRate / 100;
+  
+    // Calculate the number of compounding periods (years in this case)
+    const n = years;
+  
+    // Calculate the future value factor
+    const fvFactor = Math.pow(1 + r, n);
+    
+    // Calculate the required monthly investment
+    const monthlyInvestment = (targetAmount * r) / (12 * (fvFactor - 1));
+  
+    // Round to 2 decimal places
+    return Math.round(monthlyInvestment * 100) / 100;
 }
 
 function formatCurrency(value) {
@@ -93,22 +109,22 @@ function formatCurrency(value) {
 }
 
 function calculateRetirement() {
-    const entryDate = document.getElementById('entryDate').value;
-    const exitDate = document.getElementById('exitDate').value;
-    const currentSalary = Math.ceil(parseFloat(document.getElementById('currentSalary').value));
-    const growthRate = parseFloat(document.getElementById('growthRate').value);
-    const inflationRate = parseFloat(document.getElementById('inflationRate').value);
-    const pfContribution = parseFloat(document.getElementById('pfContribution').value) / 100;
-    const pfReturn = parseFloat(document.getElementById('pfReturn').value);
-    const npsContribution = Math.ceil(parseFloat(document.getElementById('npsContribution').value));
-    const npsReturn = parseFloat(document.getElementById('npsReturn').value);
-    const npsAnnuity = parseFloat(document.getElementById('npsAnnuity').value) / 100;
-    const annuityReturn = parseFloat(document.getElementById('annuityReturn').value);
-    const currentPfBalance = Math.ceil(parseFloat(document.getElementById('currentPfBalance').value));
-    const monthlyOtherInvestment = Math.ceil(parseFloat(document.getElementById('monthlyOtherInvestment').value));
-    const otherReturn = parseFloat(document.getElementById('otherReturn').value);
-    const currentExpense = Math.ceil(parseFloat(document.getElementById('currentExpense').value));
-    const expenseFactor = parseFloat(document.getElementById('expenseFactor').value);
+    const entryDate = document.getElementById('entryDate').value || new Date().toISOString().substring(0, 10);
+    const exitDate = document.getElementById('exitDate').value || new Date(new Date().setFullYear(new Date().getFullYear() + 30)).toISOString().substring(0, 10);
+    const currentSalary = Math.ceil(parseFloat(document.getElementById('currentSalary').value) || 15000);
+    const growthRate = parseFloat(document.getElementById('growthRate').value) || 0;
+    const inflationRate = parseFloat(document.getElementById('inflationRate').value) || 0;
+    const pfContribution = parseFloat(document.getElementById('pfContribution').value) / 100 || 0;
+    const pfReturn = parseFloat(document.getElementById('pfReturn').value) || 0;
+    const npsContribution = Math.ceil(parseFloat(document.getElementById('npsContribution').value) || 0);
+    const npsReturn = parseFloat(document.getElementById('npsReturn').value) || 0;
+    const npsAnnuity = parseFloat(document.getElementById('npsAnnuity').value) / 100 || 0;
+    const annuityReturn = parseFloat(document.getElementById('annuityReturn').value) || 0;
+    const currentPfBalance = Math.ceil(parseFloat(document.getElementById('currentPfBalance').value) || 0);
+    const monthlyOtherInvestment = Math.ceil(parseFloat(document.getElementById('monthlyOtherInvestment').value) || 0);
+    const otherReturn = parseFloat(document.getElementById('otherReturn').value) || 0;
+    const currentExpense = Math.ceil(parseFloat(document.getElementById('currentExpense').value) || 0);
+    const expenseFactor = parseFloat(document.getElementById('expenseFactor').value) || 0;
 
     const yearsOfService = calculateYearsOfService(entryDate, exitDate);
     const pensionableSalary = calculatePensionableSalary(currentSalary, growthRate);
@@ -120,28 +136,39 @@ function calculateRetirement() {
     const npsLumpSum = Math.ceil(npsCorpus * (1 - npsAnnuity));
     const npsPension = calculateNpsPension(npsAnnuityCorpus, annuityReturn);
     const otherInvestmentCorpus = calculateOtherInvestmentCorpus(monthlyOtherInvestment, otherReturn, yearsOfService);
-    const totalLumpSum = Math.ceil(pfCorpus + npsLumpSum + otherInvestmentCorpus);
-    const totalPension = Math.ceil(epsPension + npsPension);
+    const totalLumpSum = Math.ceil((pfCorpus || 0) + (npsLumpSum || 0) + (otherInvestmentCorpus || 0));
+    const totalPension = Math.ceil((epsPension || 0) + (npsPension || 0));
     const totalLumpSumPresent = Math.ceil(calculatePresentValue(totalLumpSum, inflationRate, yearsOfService));
     const totalPensionPresent = Math.ceil(calculatePresentValue(totalPension * 12, inflationRate, yearsOfService) / 12);
     const requiredMonthlyExpenseFuture = calculateRequiredMonthlyExpense(currentExpense, inflationRate, yearsOfService, expenseFactor);
     const shortageInPension = requiredMonthlyExpenseFuture - totalPension;
-    const requiredNpsInvestment = calculateRequiredNpsInvestment(shortageInPension, npsReturn, yearsOfService);
+    const requiredNpsInvestment = calculateRequiredNpsInvestment(shortageInPension, annuityReturn, npsReturn, yearsOfService);
 
     document.getElementById('result').innerHTML = `
-        <p>Exit Date: ${exitDate}</p>
-        <p>PF Corpus: ${formatCurrency(pfCorpus)}</p>
-        <p>NPS Lump Sum: ${formatCurrency(npsLumpSum)}</p>
-        <p>NPS Pension: ${formatCurrency(npsPension)}</p>
-        <p>EPS Pension: ${formatCurrency(epsPension)}</p>
-        <p>Other Investment Corpus: ${formatCurrency(otherInvestmentCorpus)}</p>
-        <p><strong>Total Lump Sum: ${formatCurrency(totalLumpSum)}</strong></p>
-        <p><strong>Total Pension: ${formatCurrency(totalPension)}</strong></p>
-        <p><strong>Present Value of Total Lump Sum: ${formatCurrency(totalLumpSumPresent)}</strong></p>
-        <p><strong>Present Value of Total Pension: ${formatCurrency(totalPensionPresent)}</strong></p>
-        <p><strong>Required Monthly Expense after Retirement (Future Value): ${formatCurrency(requiredMonthlyExpenseFuture)}</strong></p>
-        ${shortageInPension > 0 ? `<p><strong>Shortage in Pension: ${formatCurrency(shortageInPension)}</strong></p>
-        <p><strong>Required Monthly Investment in NPS: ${formatCurrency(requiredNpsInvestment)}</strong></p>` : ''}
+        <div class="lump-sum-section">
+            <h2>Lump Sum</h2>
+            <p>PF Corpus: ${formatCurrency(pfCorpus)}</p>
+            <p>NPS Lump Sum: ${formatCurrency(npsLumpSum)}</p>
+            <p>Other Investment Corpus: ${formatCurrency(otherInvestmentCorpus)}</p>
+            <p><strong>Total Lump Sum: ${formatCurrency(totalLumpSum)}</strong></p>
+            <p><strong>Present Value of Total Lump Sum: ${formatCurrency(totalLumpSumPresent)}</strong></p>
+        </div>
+        
+        <div class="pension-section">
+            <h2>Pension</h2>
+            <p>EPS Pension: ${formatCurrency(epsPension)}</p>
+            <p>NPS Pension: ${formatCurrency(npsPension)}</p>
+            <p><strong>Total Pension: ${formatCurrency(totalPension)}</strong></p>
+            <p><strong>Present Value of Total Pension: ${formatCurrency(totalPensionPresent)}</strong></p>
+        </div>
+
+        <div class="expense-section">
+            <h2>Required Monthly Expense</h2>
+            <p><strong>Required Monthly Expense after Retirement (Future Value): ${formatCurrency(requiredMonthlyExpenseFuture)}</strong></p>
+            ${shortageInPension > 0 ? `
+            <p><strong>Shortage in Pension: ${formatCurrency(shortageInPension)}</strong></p>
+            <p><strong>Required Monthly Investment in NPS: ${formatCurrency(requiredNpsInvestment)}</strong></p>` : ''}
+        </div>
     `;
 
     document.getElementById('debug').innerHTML = `
@@ -184,6 +211,7 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
         calculateOtherInvestmentCorpus,
         calculateRequiredMonthlyExpense,
         calculateRequiredNpsInvestment,
+        calculateMonthlyInvestment,
         formatCurrency,
         calculateRetirement
     };

@@ -27,12 +27,13 @@
         <form onsubmit="event.preventDefault(); calculateRetirement();">
             <div>
                 <label for="entryDate">Job Start Date:</label>
-                <input type="date" id="entryDate" value="${new Date().toISOString().substring(0, 10)}" required>
+                <input type="date" id="entryDate" required>
             </div>
             <div>
-                <label for="exitDate">Exit Date:</label>
-                <input type="date" id="exitDate" value="${new Date(new Date().setFullYear(new Date().getFullYear() + 30)).toISOString().substring(0, 10)}" required>
+                <label for="exitDate">Retirement Date:</label>
+                <input type="date" id="exitDate" required>
             </div>
+            <!-- Other input fields remain unchanged -->
             <div>
                 <label for="currentSalary">Current Salary:</label>
                 <input type="number" id="currentSalary" value="15000" required>
@@ -101,5 +102,17 @@
         <a href="https://www.facebook.com/kisorbiswal" target="_blank">Facebook</a>
         <a href="https://www.instagram.com/kisorbiswal" target="_blank">Instagram</a>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const today = new Date().toISOString().substring(0, 10);
+            const futureDate = new Date();
+            futureDate.setFullYear(futureDate.getFullYear() + 30);
+            const retirementDate = futureDate.toISOString().substring(0, 10);
+
+            document.getElementById('entryDate').value = today;
+            document.getElementById('exitDate').value = retirementDate;
+        });
+    </script>
 </body>
 </html>

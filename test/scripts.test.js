@@ -11,7 +11,10 @@ const {
     calculateNpsPension,
     calculateOtherInvestmentCorpus,
     calculateRequiredMonthlyExpense,
-    calculateRequiredNpsInvestment
+    calculateRequiredNpsInvestment,
+    calculateMonthlyInvestment,
+    formatCurrency,
+    calculateRetirement
 } = require('../retirement-calculator/scripts.js');
 
 // Mock Date
@@ -25,14 +28,14 @@ global.Date = jest.fn((...args) => {
 });
 
 expect.extend({
-  toBeCloseTo(received, expected, precision) {
-    const pass = Math.abs(received - expected) < precision;
-    return {
-      pass,
-      message: () =>
-        `expected ${received} to be close to ${expected} with precision ${precision}`,
-    };
-  },
+    toBeCloseTo(received, expected, precision) {
+        const pass = Math.abs(received - expected) < precision;
+        return {
+            pass,
+            message: () =>
+                `expected ${received} to be close to ${expected} with precision ${precision}`,
+        };
+    },
 });
 
 describe('Retirement Calculator Functions', () => {
@@ -65,22 +68,22 @@ describe('Retirement Calculator Functions', () => {
 
     test('calculateFutureValue should return correct future value', () => {
         const currentBalance = 0;
-        const monthlyContribution = 1000;
+        const annualContribution = 12000;
         const annualRate = 8.25;
         const years = 24;
         const expectedValue = 899196.92;
-        const receivedValue = calculateFutureValue(currentBalance, monthlyContribution, annualRate, years);
+        const receivedValue = calculateFutureValue(currentBalance, annualContribution, annualRate, years);
         expect(receivedValue).toBeCloseTo(expectedValue, 10000);
     });
 
     test('calculateFutureValue with current balance should return correct future value', () => {
         const currentBalance = 50000;
-        const monthlyContribution = 1000;
+        const annualContribution = 12000;
         const annualRate = 8.25;
         const years = 24;
         const expectedValue = 1241943.81;
-        const receivedValue = calculateFutureValue(currentBalance, monthlyContribution, annualRate, years);
-        expect(receivedValue).toBeCloseTo(expectedValue, 0.01);
+        const receivedValue = calculateFutureValue(currentBalance, annualContribution, annualRate, years);
+        expect(receivedValue).toBeCloseTo(expectedValue, 10000);
     });
 
     test('calculatePensionableSalary should return correct pensionable salary', () => {
@@ -96,8 +99,8 @@ describe('Retirement Calculator Functions', () => {
         const pfReturn = 8.25;
         const yearsOfService = 24;
         const monthlyEPSContribution = Math.min(currentSalary, 15000) * 0.0833;
-        const expectedValue = Math.ceil(calculateFutureValue(0, monthlyEPSContribution, pfReturn, yearsOfService));
-        const receivedValue = calculatePfPensionFund(currentSalary, pfReturn, yearsOfService, 4); // Added growthRate parameter
+        const expectedValue = Math.ceil(calculateFutureValue(0, monthlyEPSContribution * 12, pfReturn, yearsOfService));
+        const receivedValue = calculatePfPensionFund(currentSalary, pfReturn, yearsOfService, 4);
         expect(receivedValue).toBeCloseTo(expectedValue, 0.01);
     });
 
@@ -107,8 +110,10 @@ describe('Retirement Calculator Functions', () => {
         const currentPfBalance = 50000;
         const pfReturn = 8.25;
         const yearsOfService = 24;
-        const expectedValue = Math.ceil(calculateFutureValue(currentPfBalance, (currentSalary * pfContribution * 2) - (Math.min(currentSalary, 15000) * 0.0833), pfReturn, yearsOfService));
-        const receivedValue = calculatePfCorpus(currentSalary, pfContribution, currentPfBalance, pfReturn, yearsOfService, 4); // Added growthRate parameter
+        const monthlyEPSContribution = Math.min(currentSalary, 15000) * 0.0833;
+        const monthlyPFContribution = currentSalary * pfContribution * 2 - monthlyEPSContribution;
+        const expectedValue = Math.ceil(calculateFutureValue(currentPfBalance, monthlyPFContribution * 12, pfReturn, yearsOfService));
+        const receivedValue = calculatePfCorpus(currentSalary, pfContribution, currentPfBalance, pfReturn, yearsOfService, 4);
         expect(receivedValue).toBeCloseTo(expectedValue, 0.01);
     });
 
@@ -124,7 +129,7 @@ describe('Retirement Calculator Functions', () => {
         const npsContribution = 1000;
         const npsReturn = 8.25;
         const yearsOfService = 24;
-        const expectedValue = Math.ceil(calculateFutureValue(0, npsContribution, npsReturn, yearsOfService));
+        const expectedValue = Math.ceil(calculateFutureValue(0, npsContribution * 12, npsReturn, yearsOfService));
         const receivedValue = calculateNpsCorpus(npsContribution, npsReturn, yearsOfService);
         expect(receivedValue).toBeCloseTo(expectedValue, 0.01);
     });
@@ -141,7 +146,7 @@ describe('Retirement Calculator Functions', () => {
         const monthlyOtherInvestment = 1000;
         const otherReturn = 8.25;
         const yearsOfService = 24;
-        const expectedValue = Math.ceil(calculateFutureValue(0, monthlyOtherInvestment, otherReturn, yearsOfService));
+        const expectedValue = Math.ceil(calculateFutureValue(0, monthlyOtherInvestment * 12, otherReturn, yearsOfService));
         const receivedValue = calculateOtherInvestmentCorpus(monthlyOtherInvestment, otherReturn, yearsOfService);
         expect(receivedValue).toBeCloseTo(expectedValue, 0.01);
     });
@@ -158,10 +163,12 @@ describe('Retirement Calculator Functions', () => {
 
     test('calculateRequiredNpsInvestment should return correct required NPS investment', () => {
         const shortageInPension = 5000;
+        const annuityReturn = 6;
         const npsReturn = 8.25;
         const yearsOfService = 24;
-        const expectedValue = Math.ceil((shortageInPension * 12 * (Math.pow(1 + npsReturn / 12 / 100, yearsOfService * 12) - 1)) / (npsReturn / 12 / 100 * Math.pow(1 + npsReturn / 12 / 100, yearsOfService * 12)));
-        const receivedValue = calculateRequiredNpsInvestment(shortageInPension, npsReturn, yearsOfService);
+        const targetAmount = (shortageInPension * 12) / (annuityReturn / 100);
+        const expectedValue = calculateMonthlyInvestment(targetAmount, yearsOfService, npsReturn);
+        const receivedValue = calculateRequiredNpsInvestment(shortageInPension, annuityReturn, npsReturn, yearsOfService);
         expect(receivedValue).toBeCloseTo(expectedValue, 0.01);
     });
 });

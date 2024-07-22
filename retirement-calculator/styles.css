@@ -195,10 +195,19 @@ form button:hover {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
+#result .lump-sum-section, #result .pension-section, #result .expense-section {
+    margin-bottom: 20px;
+}
+
 #result p {
     margin: 10px 0;
     font-size: 18px;
-    font-weight: bold;
+}
+
+#result h2 {
+    margin-top: 0;
+    font-size: 24px;
+    color: #35424a;
 }
 
 #debug {
