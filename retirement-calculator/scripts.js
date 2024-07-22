@@ -22,15 +22,11 @@ function calculateYearsOfService(entryDate, exitDate) {
     return (exit - entry) / (1000 * 60 * 60 * 24 * 365.25);
 }
 
-function calculateLast60MonthsSalary(currentSalary, growthRate) {
+function calculateLast60MonthsSalary(currentSalary, growthRate, yearsOfService) {
+    const salaryAtRetirement = currentSalary * Math.pow(1 + growthRate / 100, yearsOfService);
     let salaries = [];
     for (let n = 0; n < 60; n++) {
-        let monthSalary;
-        if (growthRate === 0) {
-            monthSalary = currentSalary;
-        } else {
-            monthSalary = currentSalary * Math.pow(1 + growthRate / 100, -n / 12);
-        }
+        let monthSalary = salaryAtRetirement * Math.pow(1 + growthRate / 100, -n / 12);
         monthSalary = Math.min(monthSalary, 15000); // Cap at 15000
         salaries.push(monthSalary);
     }
@@ -38,8 +34,8 @@ function calculateLast60MonthsSalary(currentSalary, growthRate) {
     return totalSalary / 60;
 }
 
-function calculatePensionableSalary(currentSalary, growthRate) {
-    return calculateLast60MonthsSalary(currentSalary, growthRate);
+function calculatePensionableSalary(currentSalary, growthRate, yearsOfService) {
+    return calculateLast60MonthsSalary(currentSalary, growthRate, yearsOfService);
 }
 
 function calculatePresentValue(futureValue, inflationRate, years) {
@@ -141,7 +137,7 @@ function calculateRetirement() {
     const expenseFactor = parseFloat(document.getElementById('expenseFactor').value) || 0;
 
     const yearsOfService = calculateYearsOfService(entryDate, exitDate);
-    const pensionableSalary = calculatePensionableSalary(currentSalary, growthRate);
+    const pensionableSalary = calculatePensionableSalary(currentSalary, growthRate, yearsOfService);
     const pfPensionFund = calculatePfPensionFund(currentSalary, pfReturn, yearsOfService, growthRate);
     const pfCorpus = calculatePfCorpus(currentSalary, pfContribution, currentPfBalance, pfReturn, yearsOfService, growthRate);
     const epsPension = calculateEpsPension(pensionableSalary, yearsOfService);
@@ -159,6 +155,7 @@ function calculateRetirement() {
     const requiredMonthlyExpenseFuture = calculateRequiredMonthlyExpense(currentExpense, inflationRate, yearsOfService, expenseFactor);
     const shortageInPension = requiredMonthlyExpenseFuture - totalPension;
     const requiredNpsInvestment = calculateRequiredNpsInvestment(shortageInPension, annuityReturn, npsReturn, yearsOfService);
+    const lumpSumEquivalentForShortage = (shortageInPension * 12) / (annuityReturn / 100);
 
     document.getElementById('result').innerHTML = `
         <div class="lump-sum-section">
@@ -185,7 +182,8 @@ function calculateRetirement() {
             <p><strong>Required Monthly Expense after Retirement (Future Value): ${formatCurrency(requiredMonthlyExpenseFuture)}</strong></p>
             ${shortageInPension > 0 ? `
             <p><strong>Shortage in Pension: ${formatCurrency(shortageInPension)}</strong></p>
-            <p><strong>Required Monthly Investment in NPS: ${formatCurrency(requiredNpsInvestment)}</strong></p>` : ''}
+            <p><strong>Required Monthly Investment in NPS: ${formatCurrency(requiredNpsInvestment)}</strong></p>
+            <p><strong>Lump Sum Equivalent for Shortage: ${formatCurrency(lumpSumEquivalentForShortage)}</strong></p>` : ''}
         </div>
     `;
 

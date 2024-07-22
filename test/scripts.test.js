@@ -10,6 +10,7 @@ const {
     calculateNpsCorpus,
     calculateNpsPension,
     calculateOtherInvestmentCorpus,
+    calculateCapitalGainTax,
     calculateRequiredMonthlyExpense,
     calculateRequiredNpsInvestment,
     calculateMonthlyInvestment,
@@ -53,7 +54,7 @@ describe('Retirement Calculator Functions', () => {
         const currentSalary = 20000;
         const growthRate = 4;
         const expectedValue = 15000; // Assuming this is the expected capped value
-        const receivedValue = calculateLast60MonthsSalary(currentSalary, growthRate);
+        const receivedValue = calculateLast60MonthsSalary(currentSalary, growthRate, 24);
         expect(receivedValue).toBeCloseTo(expectedValue, 0.01);
     });
 
@@ -89,8 +90,8 @@ describe('Retirement Calculator Functions', () => {
     test('calculatePensionableSalary should return correct pensionable salary', () => {
         const currentSalary = 20000;
         const growthRate = 4;
-        const expectedValue = calculateLast60MonthsSalary(currentSalary, growthRate);
-        const receivedValue = calculatePensionableSalary(currentSalary, growthRate);
+        const expectedValue = calculateLast60MonthsSalary(currentSalary, growthRate, 24);
+        const receivedValue = calculatePensionableSalary(currentSalary, growthRate, 24);
         expect(receivedValue).toBeCloseTo(expectedValue, 0.01);
     });
 
