@@ -76,6 +76,10 @@ function calculateOtherInvestmentCorpus(monthlyOtherInvestment, otherReturn, yea
     return Math.ceil(calculateFutureValue(0, monthlyOtherInvestment * 12, otherReturn, yearsOfService));
 }
 
+function calculateCapitalGainTax(corpus, capitalGainTaxRate) {
+    return (corpus * capitalGainTaxRate) / 100;
+}
+
 function calculateRequiredMonthlyExpense(currentExpense, inflationRate, yearsOfService, expenseFactor) {
     const futureExpense = currentExpense * Math.pow(1 + inflationRate / 100, yearsOfService);
     return Math.ceil(futureExpense * expenseFactor);
@@ -83,7 +87,6 @@ function calculateRequiredMonthlyExpense(currentExpense, inflationRate, yearsOfS
 
 function calculateRequiredNpsInvestment(shortageInPension, annuityReturn, npsReturn, yearsOfService) {
     const targetAmount = (shortageInPension * 12) / (annuityReturn / 100);
-    
     return calculateMonthlyInvestment(targetAmount, yearsOfService, npsReturn);
 }
 
@@ -96,7 +99,7 @@ function calculateMonthlyInvestment(targetAmount, years, annualInterestRate) {
   
     // Calculate the future value factor
     const fvFactor = Math.pow(1 + r, n);
-    
+  
     // Calculate the required monthly investment
     const monthlyInvestment = (targetAmount * r) / (12 * (fvFactor - 1));
   
@@ -123,6 +126,7 @@ function calculateRetirement() {
     const currentPfBalance = Math.ceil(parseFloat(document.getElementById('currentPfBalance').value) || 0);
     const monthlyOtherInvestment = Math.ceil(parseFloat(document.getElementById('monthlyOtherInvestment').value) || 0);
     const otherReturn = parseFloat(document.getElementById('otherReturn').value) || 0;
+    const capitalGainTaxRate = parseFloat(document.getElementById('capitalGainTaxRate').value) || 0;
     const currentExpense = Math.ceil(parseFloat(document.getElementById('currentExpense').value) || 0);
     const expenseFactor = parseFloat(document.getElementById('expenseFactor').value) || 0;
 
@@ -135,7 +139,9 @@ function calculateRetirement() {
     const npsAnnuityCorpus = Math.ceil(npsCorpus * npsAnnuity);
     const npsLumpSum = Math.ceil(npsCorpus * (1 - npsAnnuity));
     const npsPension = calculateNpsPension(npsAnnuityCorpus, annuityReturn);
-    const otherInvestmentCorpus = calculateOtherInvestmentCorpus(monthlyOtherInvestment, otherReturn, yearsOfService);
+    let otherInvestmentCorpus = calculateOtherInvestmentCorpus(monthlyOtherInvestment, otherReturn, yearsOfService);
+    const capitalGainTax = calculateCapitalGainTax(otherInvestmentCorpus, capitalGainTaxRate);
+    otherInvestmentCorpus -= capitalGainTax;
     const totalLumpSum = Math.ceil((pfCorpus || 0) + (npsLumpSum || 0) + (otherInvestmentCorpus || 0));
     const totalPension = Math.ceil((epsPension || 0) + (npsPension || 0));
     const totalLumpSumPresent = Math.ceil(calculatePresentValue(totalLumpSum, inflationRate, yearsOfService));
@@ -150,6 +156,7 @@ function calculateRetirement() {
             <p>PF Corpus: ${formatCurrency(pfCorpus)}</p>
             <p>NPS Lump Sum: ${formatCurrency(npsLumpSum)}</p>
             <p>Other Investment Corpus: ${formatCurrency(otherInvestmentCorpus)}</p>
+            <p>Capital Gain Tax: ${formatCurrency(capitalGainTax)}</p>
             <p><strong>Total Lump Sum: ${formatCurrency(totalLumpSum)}</strong></p>
             <p><strong>Present Value of Total Lump Sum: ${formatCurrency(totalLumpSumPresent)}</strong></p>
         </div>
@@ -185,6 +192,7 @@ function calculateRetirement() {
         <p>NPS Pension: ₹${npsPension.toFixed(2)}</p>
         <p>EPS Pension: ₹${epsPension.toFixed(2)}</p>
         <p>Future Value of Other Investments: ₹${otherInvestmentCorpus.toFixed(2)}</p>
+        <p>Capital Gain Tax: ₹${capitalGainTax.toFixed(2)}</p>
         <p>Total Lump Sum: ₹${totalLumpSum.toFixed(2)}</p>
         <p>Total Monthly Pension: ₹${totalPension.toFixed(2)}</p>
         <p>Present Value of Total Lump Sum: ₹${totalLumpSumPresent.toFixed(2)}</p>
@@ -209,6 +217,7 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
         calculateNpsCorpus,
         calculateNpsPension,
         calculateOtherInvestmentCorpus,
+        calculateCapitalGainTax,
         calculateRequiredMonthlyExpense,
         calculateRequiredNpsInvestment,
         calculateMonthlyInvestment,
