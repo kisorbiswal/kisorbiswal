@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retirement Calculator</title>
+    <title>Calculator</title>
     <link rel="stylesheet" href="styles.css">
     <script src="scripts.js" defer></script>
 </head>
@@ -11,8 +11,9 @@
     <header>
         <div class="container">
             <div id="branding">
-                <h1>Kisor Biswal's Retirement Calculator</h1>
+                <h1>Calculator</h1>
             </div>
+            <button class="menu-toggle" onclick="toggleMenu()">Menu</button>
             <nav>
                 <ul>
                     <li><a href="../index.html">Home</a></li>
@@ -104,6 +105,7 @@
             <button type="submit">Calculate</button>
         </form>
         <div id="result"></div>
+        <button onclick="toggleDebug()">Toggle Behind the Scene</button>
         <div id="debug"></div>
         <div id="disclaimer">
             <p><strong>Disclaimer:</strong> The calculations provided by this tool are for informational purposes only and may not be accurate. Actual results may vary. Please consult a financial advisor for personalized advice.</p>
@@ -127,6 +129,16 @@
             document.getElementById('entryDate').value = today;
             document.getElementById('exitDate').value = retirementDate;
         });
+
+        function toggleMenu() {
+            const nav = document.querySelector('header nav');
+            nav.style.display = nav.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function toggleDebug() {
+            const debug = document.getElementById('debug');
+            debug.style.display = debug.style.display === 'block' ? 'none' : 'block';
+        }
     </script>
 </body>
 </html>
