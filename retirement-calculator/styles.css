@@ -5,10 +5,12 @@ body {
     color: #333;
     margin: 0;
     padding: 0;
+    overflow-x: hidden; /* Prevent horizontal scrollbar */
 }
 
 .container {
-    width: 90%;
+    width: 90%; /* Increased width for larger screens */
+    max-width: 1200px; /* Set a max width */
     margin: auto;
     overflow: hidden;
 }
@@ -50,6 +52,10 @@ header #branding h1 {
 header nav {
     float: right;
     margin-top: 10px;
+}
+
+header .menu-toggle {
+    display: none;
 }
 
 section {
@@ -117,6 +123,8 @@ footer a {
     header nav {
         float: none;
         text-align: center;
+        display: none; /* Hide the navigation initially */
+        flex-direction: column;
     }
 
     header ul {
@@ -129,27 +137,24 @@ footer a {
     }
 
     .container {
-        width: 100%;
-        padding: 0 10px;
+        width: 98%; /* Apply fix */
+        padding: 1px; /* Apply fix */
     }
 
     #social p {
         text-align: center;
     }
 
-    header nav {
-        display: none;
+    header .menu-toggle {
+        display: block; /* Show the menu toggle button */
     }
 
-    .menu-toggle {
-        display: block;
-        cursor: pointer;
-        padding: 10px;
-        background: #35424a;
-        color: #ffffff;
-        text-align: center;
-        border: none;
-        width: 100%;
+    form {
+        grid-template-columns: 1fr; /* Single column layout for mobile */
+    }
+
+    form button {
+        grid-column: span 1; /* Single column span for the button */
     }
 }
 
@@ -163,7 +168,7 @@ footer a {
 form {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    gap: 10px; /* Reduced gap */
     background: #fff;
     padding: 20px;
     border-radius: 10px;
@@ -184,7 +189,7 @@ form input {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 15px; /* Updated font size */
 }
 
 form button {
