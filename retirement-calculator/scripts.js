@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const dobInput = document.getElementById('dob');
+    const entryDateInput = document.getElementById('entryDate');
     const exitDateInput = document.getElementById('exitDate');
 
     dobInput.addEventListener('change', function () {
@@ -108,19 +109,10 @@ function calculateRequiredNpsInvestment(shortageInPension, annuityReturn, npsRet
 }
 
 function calculateMonthlyInvestment(targetAmount, years, annualInterestRate) {
-    // Convert annual interest rate from percentage to decimal
     const r = annualInterestRate / 100;
-  
-    // Calculate the number of compounding periods (years in this case)
     const n = years;
-  
-    // Calculate the future value factor
     const fvFactor = Math.pow(1 + r, n);
-  
-    // Calculate the required monthly investment
     const monthlyInvestment = (targetAmount * r) / (12 * (fvFactor - 1));
-  
-    // Round to 2 decimal places
     return Math.round(monthlyInvestment * 100) / 100;
 }
 
@@ -132,6 +124,7 @@ function calculateRetirement() {
     const entryDate = document.getElementById('entryDate').value || new Date().toISOString().substring(0, 10);
     const exitDate = document.getElementById('exitDate').value || new Date(new Date().setFullYear(new Date().getFullYear() + 30)).toISOString().substring(0, 10);
     const currentSalary = Math.ceil(parseFloat(document.getElementById('currentSalary').value) || 15000);
+    const fullSalary = Math.ceil(parseFloat(document.getElementById('fullSalary').value) || 20000);
     const growthRate = parseFloat(document.getElementById('growthRate').value) || 0;
     const inflationRate = parseFloat(document.getElementById('inflationRate').value) || 0;
     const pfContribution = parseFloat(document.getElementById('pfContribution').value) / 100 || 0;
@@ -187,7 +180,8 @@ function calculateRetirement() {
         </div>
 
         <div class="expense-section">
-            <h2>Required Monthly Expense</h2>
+            <h2>In the Future</h2>
+            <p>Future Salary: ${formatCurrency(calculateSalaryGrowth(fullSalary, growthRate, yearsOfService))}</p>
             <p><strong>Required Monthly Expense after Retirement (Future Value): ${formatCurrency(requiredMonthlyExpenseFuture)}</strong></p>
             ${shortageInPension > 0 ? `
             <p><strong>Shortage in Pension: ${formatCurrency(shortageInPension)}</strong></p>
