@@ -158,32 +158,32 @@ function calculateRetirement() {
     const lumpSumEquivalentForShortage = (shortageInPension * 12) / (annuityReturn / 100);
 
     document.getElementById('result').innerHTML = `
-        <div class="lump-sum-section">
+        <div class="section lump-sum-section">
             <h2>Lump Sum</h2>
             <p>PF Corpus: ${formatCurrency(pfCorpus)}</p>
             <p>NPS Lump Sum: ${formatCurrency(npsLumpSum)}</p>
             <p>Other Investment Corpus: ${formatCurrency(otherInvestmentCorpus)}</p>
             <p>Capital Gain Tax: ${formatCurrency(capitalGainTax)}</p>
             <p><strong>Total Lump Sum: ${formatCurrency(totalLumpSum)}</strong></p>
-            <p><strong>Present Value of Total Lump Sum: ${formatCurrency(totalLumpSumPresent)}</strong></p>
+            <p>Present Value of Total Lump Sum: ${formatCurrency(totalLumpSumPresent)}</p>
         </div>
         
-        <div class="pension-section">
+        <div class="section pension-section">
             <h2>Pension</h2>
             <p>EPS Pension: ${formatCurrency(epsPension)}</p>
             <p>NPS Pension: ${formatCurrency(npsPension)}</p>
             <p><strong>Total Pension: ${formatCurrency(totalPension)}</strong></p>
-            <p><strong>Present Value of Total Pension: ${formatCurrency(totalPensionPresent)}</strong></p>
+            <p>Present Value of Total Pension: ${formatCurrency(totalPensionPresent)}</p>
         </div>
 
-        <div class="expense-section">
+        <div class="section expense-section">
             <h2>In the Future</h2>
             <p>Future Salary: ${formatCurrency(calculateSalaryGrowth(fullSalary, growthRate, yearsOfService))}</p>
             <p><strong>Required Monthly Expense after Retirement (Future Value): ${formatCurrency(requiredMonthlyExpenseFuture)}</strong></p>
             ${shortageInPension > 0 ? `
-            <p><strong>Shortage in Pension: ${formatCurrency(shortageInPension)}</strong></p>
-            <p><strong>Required Monthly Investment in NPS: ${formatCurrency(requiredNpsInvestment)}</strong></p>
-            <p><strong>Lump Sum Equivalent for Shortage: ${formatCurrency(lumpSumEquivalentForShortage)}</strong></p>` : ''}
+            <p>Shortage in Pension: ${formatCurrency(shortageInPension)}</p>
+            <p>Required Monthly Investment in NPS: ${formatCurrency(requiredNpsInvestment)}</p>
+            <p>Lump Sum Equivalent for Shortage: ${formatCurrency(lumpSumEquivalentForShortage)}</p>` : ''}
         </div>
     `;
 
