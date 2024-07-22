@@ -1,3 +1,20 @@
+document.addEventListener('DOMContentLoaded', function () {
+    const dobInput = document.getElementById('dob');
+    const exitDateInput = document.getElementById('exitDate');
+
+    dobInput.addEventListener('change', function () {
+        const dob = new Date(dobInput.value);
+        const retirementDate = new Date(dob.setFullYear(dob.getFullYear() + 60));
+        exitDateInput.value = retirementDate.toISOString().substring(0, 10);
+    });
+
+    // Set default values for DoB and exit date
+    dobInput.value = "1987-06-10";
+    const defaultDob = new Date(dobInput.value);
+    const defaultRetirementDate = new Date(defaultDob.setFullYear(defaultDob.getFullYear() + 60));
+    exitDateInput.value = defaultRetirementDate.toISOString().substring(0, 10);
+});
+
 function calculateYearsOfService(entryDate, exitDate) {
     const entry = new Date(entryDate);
     const exit = new Date(exitDate);
