@@ -138,7 +138,7 @@ footer a {
 
     .container {
         width: 98%; /* Apply fix */
-        padding: 1px; /* Apply fix */
+        padding: 0 5px; /* Apply fix */
     }
 
     #social p {
@@ -170,7 +170,7 @@ form {
     grid-template-columns: 1fr 1fr;
     gap: 10px; /* Reduced gap */
     background: #fff;
-    padding: 20px;
+    padding: 10px; /* Reduced padding */
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
@@ -181,25 +181,24 @@ form div {
 }
 
 form label {
-    font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 5px; /* Removed bold */
 }
 
 form input {
-    padding: 10px;
+    padding: 5px; /* Reduced padding */
     border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 15px; /* Updated font size */
+    font-size: 14px; /* Reduced font size */
 }
 
 form button {
     grid-column: span 2;
-    padding: 15px;
+    padding: 10px; /* Reduced padding */
     background: #35424a;
     color: #fff;
     border: none;
     border-radius: 5px;
-    font-size: 18px;
+    font-size: 16px; /* Reduced font size */
     cursor: pointer;
 }
 
@@ -221,12 +220,12 @@ form button:hover {
 
 #result p {
     margin: 10px 0;
-    font-size: 18px;
+    font-size: 16px; /* Reduced font size */
 }
 
 #result h2 {
     margin-top: 0;
-    font-size: 24px;
+    font-size: 20px; /* Reduced font size */
     color: #35424a;
 }
 
@@ -245,7 +244,7 @@ form button:hover {
 
 #debug p {
     margin: 5px 0;
-    font-size: 16px;
+    font-size: 14px; /* Reduced font size */
 }
 
 #disclaimer {
