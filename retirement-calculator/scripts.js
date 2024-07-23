@@ -116,6 +116,23 @@ function formatCurrency(value) {
     return value.toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 });
 }
 
+function calculateFIRENumber(currentExpense, inflationRate, annuityReturn, retirementAge, lifeExpectancy) {
+    const yearlyExpenses = [];
+    let expense = currentExpense * 12; // Convert to yearly expense
+    for (let age = retirementAge; age <= lifeExpectancy; age++) {
+        yearlyExpenses.push({ age, expense });
+        expense *= (1 + inflationRate / 100);
+    }
+
+    let fireNumber = 0;
+    for (let i = yearlyExpenses.length - 1; i >= 0; i--) {
+        // fireNumber = (fireNumber + yearlyExpenses[i].expense) / (1 + annuityReturn / 100);
+        fireNumber = (fireNumber + calculatePresentValue(yearlyExpenses[i].expense,annuityReturn,yearlyExpenses[i].age-retirementAge));
+    }
+
+    return { fireNumber: Math.ceil(fireNumber), yearlyExpenses };
+}
+
 function calculateRetirement() {
     const entryDate = document.getElementById('entryDate').value || new Date().toISOString().substring(0, 10);
     const exitDate = document.getElementById('exitDate').value || new Date(new Date().setFullYear(new Date().getFullYear() + 30)).toISOString().substring(0, 10);
@@ -135,6 +152,10 @@ function calculateRetirement() {
     const capitalGainTaxRate = parseFloat(document.getElementById('capitalGainTaxRate').value) || 0;
     const currentExpense = Math.ceil(parseFloat(document.getElementById('currentExpense').value) || 0);
     const expenseFactor = parseFloat(document.getElementById('expenseFactor').value) || 0;
+    const lifeExpectancy = parseFloat(document.getElementById('lifeExpectancy').value) || 0;
+    const dob = new Date(document.getElementById('dob').value);
+    const exitDateObject = new Date(exitDate);
+    const retirementAge = exitDateObject.getFullYear() - dob.getFullYear();
 
     const yearsOfService = calculateYearsOfService(entryDate, exitDate);
     const pensionableSalary = calculatePensionableSalary(currentSalary, growthRate, yearsOfService);
@@ -153,19 +174,18 @@ function calculateRetirement() {
     const totalLumpSumPresent = Math.ceil(calculatePresentValue(totalLumpSum, inflationRate, yearsOfService));
     const totalPensionPresent = Math.ceil(calculatePresentValue(totalPension * 12, inflationRate, yearsOfService) / 12);
     const requiredMonthlyExpenseFuture = calculateRequiredMonthlyExpense(currentExpense, inflationRate, yearsOfService, expenseFactor);
-    const shortageInPension = requiredMonthlyExpenseFuture - totalPension;
-    const requiredNpsInvestment = calculateRequiredNpsInvestment(shortageInPension, annuityReturn, npsReturn, yearsOfService);
-    const lumpSumEquivalentForShortage = (shortageInPension * 12) / (annuityReturn / 100);
+    const fireDetails = calculateFIRENumber(requiredMonthlyExpenseFuture, inflationRate, annuityReturn, retirementAge, lifeExpectancy);
+    const fireNumber = fireDetails.fireNumber;
 
     document.getElementById('result').innerHTML = `
         <div class="section lump-sum-section">
-            <h2>Lump Sum</h2>
+            <h2>Retirement Corpus</h2>
             <p>PF Corpus: ${formatCurrency(pfCorpus)}</p>
-            <p>NPS Lump Sum: ${formatCurrency(npsLumpSum)}</p>
+            <p>NPS Corpus: ${formatCurrency(npsLumpSum)}</p>
             <p>Other Investment Corpus: ${formatCurrency(otherInvestmentCorpus)}</p>
             <p>Capital Gain Tax: ${formatCurrency(capitalGainTax)}</p>
-            <p><strong>Total Lump Sum: ${formatCurrency(totalLumpSum)}</strong></p>
-            <p>Present Value of Total Lump Sum: ${formatCurrency(totalLumpSumPresent)}</p>
+            <p><strong>Total Corpus: ${formatCurrency(totalLumpSum)}</strong></p>
+            <p>Present Value of Total Corpus: ${formatCurrency(totalLumpSumPresent)}</p>
         </div>
         
         <div class="section pension-section">
@@ -177,39 +197,24 @@ function calculateRetirement() {
         </div>
 
         <div class="section expense-section">
-            <h2>In the Future</h2>
+            <h2>FIRE(Financial Independence, Retire Early)</h2>
             <p>Future Salary: ${formatCurrency(calculateSalaryGrowth(fullSalary, growthRate, yearsOfService))}</p>
-            <p><strong>Required Monthly Expense after Retirement (Future Value): ${formatCurrency(requiredMonthlyExpenseFuture)}</strong></p>
-            ${shortageInPension > 0 ? `
-            <p>Shortage in Pension: ${formatCurrency(shortageInPension)}</p>
-            <p>Required Monthly Investment in NPS: ${formatCurrency(requiredNpsInvestment)}</p>
-            <p>Lump Sum Equivalent for Shortage: ${formatCurrency(lumpSumEquivalentForShortage)}</p>` : ''}
+            <p>Future Monthly Expense: ${formatCurrency(requiredMonthlyExpenseFuture)}</p>
+            <p><strong>FIRE Number(Considering Pension): ${formatCurrency(fireNumber)}</strong></p>
+            ${fireNumber > totalLumpSum ? `
+            <p><strong>Shortage in Corpus: ${formatCurrency(fireNumber - totalLumpSum)}</strong></p>` : `
+            <p>Surplus of Corpus: ${formatCurrency(totalLumpSum - fireNumber)}</p>`}
+
         </div>
     `;
 
-    document.getElementById('debug').innerHTML = `
-        <h2>Behind the Scene</h2>
-        <p>Years of Service: ${yearsOfService.toFixed(2)}</p>
-        <p>Pensionable Salary (Last 60 Months Average): ₹${pensionableSalary.toFixed(2)}</p>
-        <p>Monthly EPS Contribution: ₹${Math.min(currentSalary, 15000) * 0.0833}</p>
-        <p>Monthly PF Contribution (excluding EPS): ₹${currentSalary * pfContribution * 2 - Math.min(currentSalary, 15000) * 0.0833}</p>
-        <p>Future Value of PF Pension Fund: ₹${pfPensionFund.toFixed(2)}</p>
-        <p>Future Value of PF Corpus: ₹${pfCorpus.toFixed(2)}</p>
-        <p>Future Value of NPS Corpus: ₹${npsCorpus.toFixed(2)}</p>
-        <p>NPS Annuity Corpus: ₹${npsAnnuityCorpus.toFixed(2)}</p>
-        <p>NPS Lump Sum: ₹${npsLumpSum.toFixed(2)}</p>
-        <p>NPS Pension: ₹${npsPension.toFixed(2)}</p>
-        <p>EPS Pension: ₹${epsPension.toFixed(2)}</p>
-        <p>Future Value of Other Investments: ₹${otherInvestmentCorpus.toFixed(2)}</p>
-        <p>Capital Gain Tax: ₹${capitalGainTax.toFixed(2)}</p>
-        <p>Total Lump Sum: ₹${totalLumpSum.toFixed(2)}</p>
-        <p>Total Monthly Pension: ₹${totalPension.toFixed(2)}</p>
-        <p>Present Value of Total Lump Sum: ₹${totalLumpSumPresent.toFixed(2)}</p>
-        <p>Present Value of Total Pension: ₹${totalPensionPresent.toFixed(2)}</p>
-        <p>Required Monthly Expense after Retirement (Future Value): ₹${requiredMonthlyExpenseFuture.toFixed(2)}</p>
-        <p>Shortage in Pension: ₹${shortageInPension.toFixed(2)}</p>
-        <p>Required Monthly Investment in NPS: ₹${requiredNpsInvestment.toFixed(2)}</p>
-    `;
+    let detailsTable = '<h2>Details</h2><table><tr><th>Age</th><th>Annual Expense</th></tr>';
+    fireDetails.yearlyExpenses.forEach(detail => {
+        detailsTable += `<tr><td>${detail.age}</td><td>${formatCurrency(detail.expense)}</td></tr>`;
+    });
+    detailsTable += '</table>';
+
+    document.getElementById('debug').innerHTML = detailsTable;
 }
 
 // Export functions for Node.js environment (test environment)
@@ -231,6 +236,7 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
         calculateRequiredNpsInvestment,
         calculateMonthlyInvestment,
         formatCurrency,
+        calculateFIRENumber,
         calculateRetirement
     };
 }

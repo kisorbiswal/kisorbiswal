@@ -1,3 +1,4 @@
+/* General styles */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f9;
@@ -8,7 +9,7 @@ body {
 }
 
 .container {
-    width: 80%;
+    width: 90%; /* Increased width for larger screens */
     max-width: 1200px; /* Set a max width */
     margin: auto;
     overflow: hidden;
@@ -33,7 +34,6 @@ header ul {
     list-style: none;
     display: flex;
     justify-content: space-around;
-    flex-wrap: wrap; /* Make sure the menu wraps on small screens */
 }
 
 header li {
@@ -52,6 +52,10 @@ header #branding h1 {
 header nav {
     float: right;
     margin-top: 10px;
+}
+
+header .menu-toggle {
+    display: none;
 }
 
 section {
@@ -131,12 +135,16 @@ footer a {
     }
 
     .container {
-        width: 98%; /* Adjust container width */
-        padding: 1%;
+        width: 98%; /* Apply fix */
+        padding: 1px; /* Apply fix */
     }
 
     #social p {
         text-align: center;
+    }
+
+    header .menu-toggle {
+        display: block; /* Show the menu toggle button */
     }
 
     form {
