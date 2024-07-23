@@ -4,10 +4,12 @@ body {
     color: #333;
     margin: 0;
     padding: 0;
+    overflow-x: hidden; /* Prevent horizontal scrollbar */
 }
 
 .container {
     width: 80%;
+    max-width: 1200px; /* Set a max width */
     margin: auto;
     overflow: hidden;
 }
@@ -128,8 +130,8 @@ footer a {
     }
 
     .container {
-        width: 100%;
-        padding: 0 10px;
+        width: 98%; /* Adjust container width */
+        padding: 1%;
     }
 
     #social p {
