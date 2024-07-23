@@ -99,11 +99,6 @@ function calculateRequiredMonthlyExpense(currentExpense, inflationRate, yearsOfS
     return Math.ceil(futureExpense * expenseFactor);
 }
 
-function calculateRequiredNpsInvestment(shortageInPension, annuityReturn, npsReturn, yearsOfService) {
-    const targetAmount = (shortageInPension * 12) / (annuityReturn / 100);
-    return calculateMonthlyInvestment(targetAmount, yearsOfService, npsReturn);
-}
-
 function calculateMonthlyInvestment(targetAmount, years, annualInterestRate) {
     const r = annualInterestRate / 100;
     const n = years;
@@ -176,6 +171,11 @@ function calculateRetirement() {
     const requiredMonthlyExpenseFuture = calculateRequiredMonthlyExpense(currentExpense, inflationRate, yearsOfService, expenseFactor);
     const fireDetails = calculateFIRENumber(requiredMonthlyExpenseFuture, inflationRate, annuityReturn, retirementAge, lifeExpectancy);
     const fireNumber = fireDetails.fireNumber;
+    const yersTillRetirement = calculateYearsOfService(new Date(), exitDate).toFixed(2);
+    var requiredNpsInvestment = 0;
+    if(fireNumber > totalLumpSum){
+        requiredNpsInvestment = calculateMonthlyInvestment(fireNumber-totalLumpSum, yersTillRetirement, npsReturn);
+    }
 
     document.getElementById('result').innerHTML = `
         <div class="section lump-sum-section">
@@ -202,7 +202,8 @@ function calculateRetirement() {
             <p>Future Monthly Expense: ${formatCurrency(requiredMonthlyExpenseFuture)}</p>
             <p><strong>FIRE Number(Considering Pension): ${formatCurrency(fireNumber)}</strong></p>
             ${fireNumber > totalLumpSum ? `
-            <p><strong>Shortage in Corpus: ${formatCurrency(fireNumber - totalLumpSum)}</strong></p>` : `
+            <p><strong>Shortage in Corpus: ${formatCurrency(fireNumber - totalLumpSum)}</strong></p>
+            <p><strong>Monthly NPS Investment(for ${yersTillRetirement} years): ${formatCurrency(requiredNpsInvestment)}</strong></p>` : `
             <p>Surplus of Corpus: ${formatCurrency(totalLumpSum - fireNumber)}</p>`}
 
         </div>
