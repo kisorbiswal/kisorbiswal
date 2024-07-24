@@ -139,6 +139,10 @@ footer a {
         text-align: center;
     }
 
+    header .menu-toggle {
+        display: block; /* Show the menu toggle button */
+    }
+
     form {
         display: grid;
         grid-template-columns: 1fr; /* Single column layout for mobile */
@@ -283,4 +287,18 @@ p.shortage {
 
 p.surplus {
     color: #16bc3d;
+}
+
+@media (max-width: 767px) {
+    form {
+        grid-template-columns: 1fr !important; /* Ensure single column layout for mobile */
+    }
+
+    form div {
+        width: 100%; /* Ensure full width for form elements */
+    }
+
+    form button {
+        grid-column: span 1; /* Single column span for the button */
+    }
 }
