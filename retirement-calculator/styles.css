@@ -251,3 +251,11 @@ form button:hover {
     color: #555;
     text-align: center;
 }
+
+p.shortage {
+    color: #e8491d;
+}
+
+p.surplus {
+    color: #16bc3d;
+}

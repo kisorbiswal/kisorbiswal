@@ -31,7 +31,7 @@
             </div>
             <div>
                 <label for="entryDate">Job Start Date:</label>
-                <input type="date" id="entryDate">
+                <input type="date" id="entryDate" value="2017-05-02">
             </div>
             <div>
                 <label for="exitDate">Retirement Date:</label>
@@ -129,7 +129,7 @@
             futureDate.setFullYear(futureDate.getFullYear() + 30);
             const retirementDate = futureDate.toISOString().substring(0, 10);
 
-            document.getElementById('entryDate').value = today;
+            // document.getElementById('entryDate').value = today;
             document.getElementById('exitDate').value = retirementDate;
         });
 
