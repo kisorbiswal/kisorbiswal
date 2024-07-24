@@ -184,8 +184,17 @@ function calculateRetirement() {
     const fireNumber = fireDetails.fireNumber;
     
     var requiredNpsInvestment = 0;
+    var requiredOtherInvestment = 0;
     if(fireNumber > totalLumpSum){
         requiredNpsInvestment = calculateMonthlyInvestment(fireNumber-totalLumpSum, yearsTillRetirement, npsReturn);
+        const allowedNps = currentSalary* 0.1+(50000/12);
+        var maxNPS = 0;
+        if(allowedNps < requiredNpsInvestment){
+            maxNPS = calculateFutureValue(0,allowedNps*12, npsReturn, yearsTillRetirement);
+            requiredNpsInvestment = allowedNps;
+            const otherInvestment = fireNumber-totalLumpSum-maxNPS;
+            requiredOtherInvestment = calculateMonthlyInvestment(otherInvestment/(1-(capitalGainTaxRate/100)), yearsTillRetirement, otherReturn);
+        }
     }
 
     document.getElementById('result').innerHTML = `
@@ -215,9 +224,11 @@ function calculateRetirement() {
             <p><strong>FIRE Number(Considering Pension): ${formatCurrency(fireNumber)}</strong></p>
             ${fireNumber > totalLumpSum ? `
             <p class="shortage"><strong>Shortage in Corpus: ${formatCurrency(fireNumber - totalLumpSum)}</strong></p>
-            <p><strong>Need Monthly NPS Investment(Till Retirement): ${formatCurrency(requiredNpsInvestment)}</strong></p>` : `
+            <p><strong>Need Monthly NPS Investment(Till Retirement, tax exempted): ${formatCurrency(requiredNpsInvestment)}</strong></p>
+            <p><strong>Need Other Investment(Till Retirement, taxable): ${formatCurrency(requiredOtherInvestment)}</strong></p>` : `
             <p class="surplus">Surplus of Corpus: ${formatCurrency(totalLumpSum - fireNumber)}</p>`}
-
+            
+    
         </div>
     `;
 
