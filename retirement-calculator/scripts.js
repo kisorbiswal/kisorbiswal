@@ -233,8 +233,8 @@ function calculateRetirement() {
             <p><strong>FIRE Number(Considering Pension): ${formatCurrency(fireNumber)}</strong></p>
             ${fireNumber > totalLumpSum ? `
             <p class="shortage"><strong>Shortage in Corpus: ${formatCurrency(fireNumber - totalLumpSum)}</strong></p>
-            <p><strong>Need Monthly NPS Investment(Till Retirement, tax exempted): ${formatCurrency(requiredNpsInvestment)}</strong></p>
-            <p><strong>Need Other Investment(Till Retirement, taxable): ${formatCurrency(requiredOtherInvestment)}</strong></p>` : `
+            <p>Need Monthly NPS Investment(Till Retirement, tax exempted): ${formatCurrency(requiredNpsInvestment)}</p>
+            <p>Need Other Investment(Till Retirement, taxable): ${formatCurrency(requiredOtherInvestment)}</p>` : `
             <p class="surplus">Surplus of Corpus: ${formatCurrency(totalLumpSum - fireNumber)}</p>`}
         </div>
         <div class="section">
