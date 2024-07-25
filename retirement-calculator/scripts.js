@@ -182,16 +182,17 @@ function calculateRetirement() {
     const requiredMonthlyExpenseFuture = calculateRequiredMonthlyExpense(currentExpense, inflationRate, yearsTillRetirement, expenseFactor);
     const fireDetails = calculateFIRENumber(requiredMonthlyExpenseFuture, inflationRate, annuityReturn, retirementAge, lifeExpectancy);
     const fireNumber = fireDetails.fireNumber;
+    const allowedNps = (Math.min(currentSalary*12, 150000)/12)*0.1+(50000/12);
     
     var requiredNpsInvestment = 0;
     var requiredOtherInvestment = 0;
     if(fireNumber > totalLumpSum){
         requiredNpsInvestment = calculateMonthlyInvestment(fireNumber-totalLumpSum, yearsTillRetirement, npsReturn);
-        const allowedNps = currentSalary* 0.1+(50000/12)-npsContribution;
+        const scopeInNPS = allowedNps - npsContribution;
         var maxNPS = 0;
-        if(allowedNps < requiredNpsInvestment){
-            maxNPS = calculateFutureValue(0,allowedNps*12, npsReturn, yearsTillRetirement);
-            requiredNpsInvestment = allowedNps;
+        if(scopeInNPS < requiredNpsInvestment){
+            maxNPS = calculateFutureValue(0,scopeInNPS*12, npsReturn, yearsTillRetirement);
+            requiredNpsInvestment = scopeInNPS;
             const otherInvestment = fireNumber-totalLumpSum-maxNPS;
             requiredOtherInvestment = calculateMonthlyInvestment(otherInvestment/(1-(capitalGainTaxRate/100)), yearsTillRetirement, otherReturn);
         }
