@@ -182,7 +182,7 @@ function calculateRetirement() {
     const requiredMonthlyExpenseFuture = calculateRequiredMonthlyExpense(currentExpense, inflationRate, yearsTillRetirement, expenseFactor);
     const fireDetails = calculateFIRENumber(requiredMonthlyExpenseFuture, inflationRate, annuityReturn, retirementAge, lifeExpectancy);
     const fireNumber = fireDetails.fireNumber;
-    const allowedNps = (Math.min(currentSalary*12, 150000)/12)*0.1+(50000/12);
+    const allowedNps = Math.min(currentSalary * 0.1, 150000/12)+(50000/12);
     
     var requiredNpsInvestment = 0;
     var requiredOtherInvestment = 0;
