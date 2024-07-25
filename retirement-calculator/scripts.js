@@ -188,14 +188,15 @@ function calculateRetirement() {
     var requiredOtherInvestment = 0;
     if(fireNumber > totalLumpSum){
         requiredNpsInvestment = calculateMonthlyInvestment(fireNumber-totalLumpSum, yearsTillRetirement, npsReturn);
-        const scopeInNPS = allowedNps - npsContribution;
+        const scopeInNPS = Math.max(allowedNps - npsContribution, 0);
         var maxNPS = 0;
         if(scopeInNPS < requiredNpsInvestment){
-            maxNPS = calculateFutureValue(0,scopeInNPS*12, npsReturn, yearsTillRetirement);
+            maxNPS = calculateFutureValue(0, scopeInNPS*12, npsReturn, yearsTillRetirement);
             requiredNpsInvestment = scopeInNPS;
             const otherInvestment = fireNumber-totalLumpSum-maxNPS;
             requiredOtherInvestment = calculateMonthlyInvestment(otherInvestment/(1-(capitalGainTaxRate/100)), yearsTillRetirement, otherReturn);
         }
+        
     }
 
     document.getElementById('result').innerHTML = `
