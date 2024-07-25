@@ -144,3 +144,39 @@ footer a {
         text-align: center;
     }
 }
+/* Minimal CSS for Burger Menu */
+
+header nav {
+    float: right;
+    margin-top: 10px;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.nav-menu {
+    display: flex;
+    justify-content: flex-end; /* Align menu items to the right */
+}
+
+@media (max-width: 767px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    .nav-menu {
+        display: none;
+        flex-direction: column;
+        align-items: flex-end; /* Align expanded menu to the right */
+    }
+
+    .nav-menu.active {
+        display: flex;
+    }
+}
