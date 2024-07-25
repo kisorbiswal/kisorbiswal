@@ -228,8 +228,9 @@ function calculateRetirement() {
             <p><strong>Need Monthly NPS Investment(Till Retirement, tax exempted): ${formatCurrency(requiredNpsInvestment)}</strong></p>
             <p><strong>Need Other Investment(Till Retirement, taxable): ${formatCurrency(requiredOtherInvestment)}</strong></p>` : `
             <p class="surplus">Surplus of Corpus: ${formatCurrency(totalLumpSum - fireNumber)}</p>`}
-            
-            <div class="section"><p class="disclaimer">Note:Your maximum tax-exempt monthly NPS investment is ${formatCurrency(allowedNps)}</p></div>
+        </div>
+        <div class="section">
+            <p class="disclaimer">Note:Your maximum tax-exempt monthly NPS investment is ${formatCurrency(allowedNps)}</p>
         </div>
     `;
 
