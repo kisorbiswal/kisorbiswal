@@ -187,7 +187,7 @@ function calculateRetirement() {
     var requiredOtherInvestment = 0;
     if(fireNumber > totalLumpSum){
         requiredNpsInvestment = calculateMonthlyInvestment(fireNumber-totalLumpSum, yearsTillRetirement, npsReturn);
-        const allowedNps = currentSalary* 0.1+(50000/12);
+        const allowedNps = currentSalary* 0.1+(50000/12)-npsContribution;
         var maxNPS = 0;
         if(allowedNps < requiredNpsInvestment){
             maxNPS = calculateFutureValue(0,allowedNps*12, npsReturn, yearsTillRetirement);
