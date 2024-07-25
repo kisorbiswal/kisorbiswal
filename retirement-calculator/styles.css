@@ -274,7 +274,7 @@ form button:hover {
     font-size: 16px;
 }
 
-#disclaimer {
+.disclaimer {
     margin-top: 20px;
     font-size: 14px;
     color: #555;
