@@ -144,8 +144,9 @@ footer a {
         text-align: center;
     }
 }
-/* Minimal CSS for Burger Menu */
 
+
+/* Minimal CSS for Burger Menu Fix */
 header nav {
     float: right;
     margin-top: 10px;
@@ -174,9 +175,21 @@ header nav {
         display: none;
         flex-direction: column;
         align-items: flex-end; /* Align expanded menu to the right */
+        position: absolute;
+        top: 60px; /* Adjust position below the header */
+        right: 10px; /* Align to the right */
+        background-color: #35424a; /* Match header background */
+        width: 100%; /* Full width */
     }
 
     .nav-menu.active {
         display: flex;
+    }
+
+    .nav-menu li {
+        padding: 10px;
+        border-bottom: 1px solid #ffffff; /* Optional: Add a border for separation */
+        width: 100%; /* Ensure full width for menu items */
+        text-align: right; /* Ensure text is aligned to the right */
     }
 }
