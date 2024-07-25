@@ -1,11 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const menuToggle = document.querySelector('.menu-toggle');
-    const navMenu = document.querySelector('.nav-menu');
-
-    menuToggle.addEventListener('click', function() {
-        navMenu.classList.toggle('active');
-    });
-    
     const dobInput = document.getElementById('dob');
     const entryDateInput = document.getElementById('entryDate');
     const exitDateInput = document.getElementById('exitDate');

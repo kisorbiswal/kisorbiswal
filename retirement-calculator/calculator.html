@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retirement Calculator</title>
+    <title>Retuirement Calculator</title>
     <link rel="stylesheet" href="styles.css">
     <script src="scripts.js" defer></script>
 </head>
@@ -14,8 +14,7 @@
                 <h1>Retirement Calculator</h1>
             </div>
             <nav>
-                <button class="menu-toggle">☰</button>
-                <ul class="nav-menu">
+                <ul>
                     <li><a href="../index.html">Home</a></li>
                     <li><a href="#calculator">Calculator</a></li>
                 </ul>
@@ -112,7 +111,7 @@
         <button onclick="toggleDebug()">Toggle Details</button>
         <div id="debug"></div>
         <div id="disclaimer">
-            <p><strong>Disclaimer:</strong> The calculations provided by this tool are for informational purposes only and may not be accurate. Actual results may vary. Please consult a financial advisor for personalized advice.</p>
+            <p><strong>Disclaimer:</strong>The calculations provided by this tool are for informational purposes only and may not be accurate. Actual results may vary. Please consult a financial advisor for personalized advice.</p>
         </div>
     </section>
 
@@ -123,9 +122,21 @@
         <a href="https://www.instagram.com/kisorbiswal" target="_blank">Instagram</a>
     </footer>
 
-    <script src="scripts.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const today = new Date().toISOString().substring(0, 10);
+            const futureDate = new Date();
+            futureDate.setFullYear(futureDate.getFullYear() + 30);
+            const retirementDate = futureDate.toISOString().substring(0, 10);
+
+            // document.getElementById('entryDate').value = today;
+            document.getElementById('exitDate').value = retirementDate;
+        });
+
+        function toggleDebug() {
+            const debug = document.getElementById('debug');
+            debug.style.display = debug.style.display === 'block' ? 'none' : 'block';
+        }
+    </script>
 </body>
 </html>
-
-
-
