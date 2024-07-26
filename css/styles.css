@@ -168,6 +168,7 @@ footer a {
         position: absolute; /* Overlay the menu */
         top: 60px; /* Adjust based on header height */
         right: 0; /* Align to right */
+        padding-right: 15px;
     }
 
     header {
