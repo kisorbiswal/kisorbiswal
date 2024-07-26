@@ -283,6 +283,13 @@ form button:hover {
     text-align: center;
 }
 
+.note {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #555;
+    text-align: center;
+}
+
 .disclaimer {
     margin-top: 70px;
     font-size: 11px;

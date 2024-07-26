@@ -147,11 +147,14 @@ function calculateRetirement() {
     const inflationRate = parseFloat(document.getElementById('inflationRate').value) || 0;
     const pfContribution = parseFloat(document.getElementById('pfContribution').value) / 100 || 0;
     const pfReturn = parseFloat(document.getElementById('pfReturn').value) || 0;
+    const ppfContribution = parseFloat(document.getElementById('ppfContribution').value)  || 0;
+    const ppfReturn = parseFloat(document.getElementById('ppfReturn').value) || 0;
     const npsContribution = Math.ceil(parseFloat(document.getElementById('npsContribution').value) || 0);
     const npsReturn = parseFloat(document.getElementById('npsReturn').value) || 0;
     const npsAnnuity = parseFloat(document.getElementById('npsAnnuity').value) / 100 || 0;
     const annuityReturn = parseFloat(document.getElementById('annuityReturn').value) || 0;
     const currentPfBalance = Math.ceil(parseFloat(document.getElementById('currentPfBalance').value) || 0);
+    const currentPpfBalance = Math.ceil(parseFloat(document.getElementById('currentPpfBalance').value) || 0);
     const monthlyOtherInvestment = Math.ceil(parseFloat(document.getElementById('monthlyOtherInvestment').value) || 0);
     const otherReturn = parseFloat(document.getElementById('otherReturn').value) || 0;
     const capitalGainTaxRate = parseFloat(document.getElementById('capitalGainTaxRate').value) || 0;
@@ -167,6 +170,7 @@ function calculateRetirement() {
     const pensionableSalary = calculatePensionableSalary(currentSalary, growthRate, yearsTillRetirement);
     const pfPensionFund = calculatePfPensionFund(currentSalary, pfReturn, yearsTillRetirement, growthRate);
     const pfCorpus = calculatePfCorpus(currentSalary, pfContribution, currentPfBalance, pfReturn, yearsTillRetirement, growthRate);
+    const ppfCorpus = calculateFutureValue(currentPpfBalance,ppfContribution*12, ppfReturn, yearsTillRetirement);
     const epsPension = calculateEpsPension(pensionableSalary, yearsOfService);
     const npsCorpus = calculateNpsCorpus(npsContribution, npsReturn, yearsTillRetirement);
     const npsAnnuityCorpus = Math.ceil(npsCorpus * npsAnnuity);
@@ -175,7 +179,7 @@ function calculateRetirement() {
     let otherInvestmentCorpus = calculateOtherInvestmentCorpus(monthlyOtherInvestment, otherReturn, yearsTillRetirement);
     const capitalGainTax = calculateCapitalGainTax(otherInvestmentCorpus, capitalGainTaxRate);
     otherInvestmentCorpus -= capitalGainTax;
-    const totalLumpSum = Math.ceil((pfCorpus || 0) + (npsLumpSum || 0) + (otherInvestmentCorpus || 0));
+    const totalLumpSum = Math.ceil((pfCorpus || 0) + (npsLumpSum || 0) + (otherInvestmentCorpus || 0)) + (ppfCorpus || 0);
     const totalPension = Math.ceil((epsPension || 0) + (npsPension || 0));
     const totalLumpSumPresent = Math.ceil(calculatePresentValue(totalLumpSum, inflationRate, yearsTillRetirement));
     const totalPensionPresent = Math.ceil(calculatePresentValue(totalPension * 12, inflationRate, yearsTillRetirement) / 12);
@@ -202,7 +206,8 @@ function calculateRetirement() {
     document.getElementById('result').innerHTML = `
         <div class="section lump-sum-section">
             <h2>Retirement Corpus</h2>
-            <p>PF Corpus: ${formatCurrency(pfCorpus)}</p>
+            <p>EPF Corpus: ${formatCurrency(pfCorpus)}</p>
+            <p>PPF Corpus: ${formatCurrency(ppfCorpus)}</p>
             <p>NPS Corpus: ${formatCurrency(npsLumpSum)}</p>
             <p>Other Investment Corpus: ${formatCurrency(otherInvestmentCorpus)}</p>
             <p>Capital Gain Tax: ${formatCurrency(capitalGainTax)}</p>
