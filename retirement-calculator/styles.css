@@ -117,7 +117,8 @@ footer a {
 
 @media (max-width: 767px) {
     header nav {
-        float: none;
+        float: right;
+        margin-top: 0;
         text-align: center;
     }
 
