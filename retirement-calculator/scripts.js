@@ -231,7 +231,7 @@ function calculateRetirement() {
             <p class="surplus">Surplus of Corpus: ${formatCurrency(totalLumpSum - fireNumber)}</p>`}
         </div>
         <div class="section">
-            <p class="disclaimer">Note:Your maximum tax-exempt monthly NPS investment is ${formatCurrency(allowedNps)}</p>
+            <p class="disclaimer">Note: Your maximum tax-exempt monthly NPS investment is ${formatCurrency(allowedNps)}. Contributions beyond this limit are not tax-deductible but benefit from no capital gains tax on maturity. However, at maturity, 40% must be used for an annuity, limiting control over the funds.</p>
         </div>
     `;
 
