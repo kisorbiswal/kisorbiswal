@@ -19,6 +19,7 @@ header {
     color: #ffffff;
     padding: 20px 0;
     border-bottom: #e8491d 3px solid;
+    position: relative; /* Ensure the menu floats */
 }
 
 header a {
@@ -32,7 +33,7 @@ header ul {
     padding: 0;
     list-style: none;
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-end; /* Align menu items to the right */
 }
 
 header li {
@@ -51,6 +52,10 @@ header #branding h1 {
 header nav {
     float: right;
     margin-top: 10px;
+}
+
+.menu-toggle {
+    display: none; /* Hide the menu toggle by default */
 }
 
 section {
@@ -117,12 +122,13 @@ footer a {
 @media (max-width: 767px) {
     header nav {
         float: none;
-        text-align: center;
+        text-align: right; /* Align text to right */
     }
 
     header ul {
         flex-direction: column;
         padding: 0;
+        align-items: flex-end; /* Align links to right */
     }
 
     header li {
@@ -137,59 +143,48 @@ footer a {
     #social p {
         text-align: center;
     }
+
+    .menu-toggle {
+        display: block; /* Show the menu toggle button */
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer;
+        padding: 10px;
+        float: right; /* Align the menu toggle to the right */
+    }
+
+    nav ul {
+        display: none;
+    }
+
+    nav ul.open {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end; /* Align links to right */
+        background: #35424a; /* Ensure background matches header */
+        width: 100%; /* Full width for better visibility */
+        position: absolute; /* Overlay the menu */
+        top: 60px; /* Adjust based on header height */
+        right: 0; /* Align to right */
+    }
+
+    header {
+        position: relative; /* Ensure positioning for the toggle */
+    }
 }
 
 @media (min-width: 1024px) {
-    #social p {
-        text-align: center;
+    header nav {
+        text-align: right; /* Align text to right */
     }
-}
 
+    nav ul {
+        display: flex !important; /* Ensure menu is always visible on large screens */
+    }
 
-/* Minimal CSS for Burger Menu Fix */
-header nav {
-    float: right;
-    margin-top: 10px;
-}
-
-.menu-toggle {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: #ffffff;
-    cursor: pointer;
-}
-
-.nav-menu {
-    display: flex;
-    justify-content: flex-end; /* Align menu items to the right */
-}
-
-@media (max-width: 767px) {
     .menu-toggle {
-        display: block;
-    }
-
-    .nav-menu {
-        display: none;
-        flex-direction: column;
-        align-items: flex-end; /* Align expanded menu to the right */
-        position: absolute;
-        top: 60px; /* Adjust position below the header */
-        right: 10px; /* Align to the right */
-        background-color: #35424a; /* Match header background */
-        width: 100%; /* Full width */
-    }
-
-    .nav-menu.active {
-        display: flex;
-    }
-
-    .nav-menu li {
-        padding: 10px;
-        border-bottom: 1px solid #ffffff; /* Optional: Add a border for separation */
-        width: 100%; /* Ensure full width for menu items */
-        text-align: right; /* Ensure text is aligned to the right */
+        display: none; /* Hide the menu toggle on larger screens */
     }
 }
