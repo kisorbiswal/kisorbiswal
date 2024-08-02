@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
     loadSavedValues();
 
     const dobInput = document.getElementById('dob');
-    const entryDateInput = document.getElementById('entryDate');
     const exitDateInput = document.getElementById('exitDate');
 
     dobInput.addEventListener('change', function () {
@@ -19,7 +18,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Set default values for DoB and exit date
-    dobInput.value = "1994-06-10";
     const defaultDob = new Date(dobInput.value);
     const defaultRetirementDate = new Date(defaultDob.setFullYear(defaultDob.getFullYear() + 60));
     exitDateInput.value = defaultRetirementDate.toISOString().substring(0, 10);
