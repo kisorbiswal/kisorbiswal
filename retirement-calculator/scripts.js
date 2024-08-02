@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // Load saved values
+    loadSavedValues();
+
     const dobInput = document.getElementById('dob');
     const entryDateInput = document.getElementById('entryDate');
     const exitDateInput = document.getElementById('exitDate');
@@ -7,6 +10,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const dob = new Date(dobInput.value);
         const retirementDate = new Date(dob.setFullYear(dob.getFullYear() + 60));
         exitDateInput.value = retirementDate.toISOString().substring(0, 10);
+        saveInputValues();
+    });
+
+    // Save values on input change
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', saveInputValues);
     });
 
     // Set default values for DoB and exit date
@@ -15,6 +24,24 @@ document.addEventListener('DOMContentLoaded', function () {
     const defaultRetirementDate = new Date(defaultDob.setFullYear(defaultDob.getFullYear() + 60));
     exitDateInput.value = defaultRetirementDate.toISOString().substring(0, 10);
 });
+
+function saveInputValues() {
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(input => {
+        localStorage.setItem(input.id, input.value);
+    });
+}
+
+function loadSavedValues() {
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(input => {
+        const savedValue = localStorage.getItem(input.id);
+        if (savedValue) {
+            input.value = savedValue;
+        }
+    });
+}
+
 
 function calculateYearsOfService(entryDate, exitDate) {
     const entry = new Date(entryDate);
