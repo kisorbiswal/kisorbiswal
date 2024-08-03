@@ -6,9 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const exitDateInput = document.getElementById('exitDate');
 
     dobInput.addEventListener('change', function () {
-        const dob = new Date(dobInput.value);
-        const retirementDate = new Date(dob.setFullYear(dob.getFullYear() + 60));
-        exitDateInput.value = retirementDate.toISOString().substring(0, 10);
+        update60On(dobInput);
         saveInputValues();
     });
 
@@ -18,11 +16,17 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Set default values for DoB and exit date
-    const defaultDob = new Date(dobInput.value);
-    const defaultRetirementDate = new Date(defaultDob.setFullYear(defaultDob.getFullYear() + 60));
-    exitDateInput.value = defaultRetirementDate.toISOString().substring(0, 10);
+    // const defaultDob = new Date(dobInput.value);
+    // const defaultRetirementDate = new Date(defaultDob.setFullYear(defaultDob.getFullYear() + 60));
+    // exitDateInput.value = defaultRetirementDate.toISOString().substring(0, 10);
 });
 
+function update60On(dobInput){
+    const dob = new Date(dobInput.value);
+    const retirementDate = new Date(dob.setFullYear(dob.getFullYear() + 60));
+    var formattedDate = retirementDate.toLocaleDateString("en-IN");
+    document.getElementById('60On').innerHTML = "You will be 60 years on " + formattedDate;
+}
 function saveInputValues() {
     const inputs = document.querySelectorAll('input');
     inputs.forEach(input => {
@@ -38,6 +42,8 @@ function loadSavedValues() {
             input.value = savedValue;
         }
     });
+    const dobInput = document.getElementById('dob');
+    update60On(dobInput)
 }
 
 
@@ -86,6 +92,9 @@ function calculatePfPensionFund(currentSalary, pfReturn, years, growthRate) {
 }
 
 function calculatePfCorpus(currentSalary, pfContribution, currentPfBalance, pfReturn, years, growthRate) {
+    if(pfContribution === 0){
+        return 0;
+    }
     let accumulatedPfCorpus = currentPfBalance || 0;
     for (let year = 0; year < years; year++) {
         const salary = calculateSalaryGrowth(currentSalary, growthRate, year);
@@ -96,12 +105,15 @@ function calculatePfCorpus(currentSalary, pfContribution, currentPfBalance, pfRe
     return Math.ceil(accumulatedPfCorpus);
 }
 
-function calculateEpsPension(pensionableSalary, yearsOfService) {
+function calculateEpsPension(pfContribution, pensionableSalary, yearsOfService) {
+    if(pfContribution === 0){
+        return 0;
+    }
     return Math.ceil((pensionableSalary * yearsOfService) / 70);
 }
 
-function calculateNpsCorpus(npsContribution, npsReturn, yearsOfService) {
-    return Math.ceil(calculateFutureValue(0, npsContribution * 12, npsReturn, yearsOfService));
+function calculateNpsCorpus(currentNpsBalance, npsContribution, npsReturn, yearsOfService) {
+    return Math.ceil(calculateFutureValue(currentNpsBalance, npsContribution * 12, npsReturn, yearsOfService));
 }
 
 function calculateNpsPension(npsAnnuityCorpus, annuityReturn) {
@@ -180,6 +192,7 @@ function calculateRetirement() {
     const annuityReturn = parseFloat(document.getElementById('annuityReturn').value) || 0;
     const currentPfBalance = Math.ceil(parseFloat(document.getElementById('currentPfBalance').value) || 0);
     const currentPpfBalance = Math.ceil(parseFloat(document.getElementById('currentPpfBalance').value) || 0);
+    const currentNpsBalance = Math.ceil(parseFloat(document.getElementById('currentNpsBalance').value) || 0);
     const monthlyOtherInvestment = Math.ceil(parseFloat(document.getElementById('monthlyOtherInvestment').value) || 0);
     const otherReturn = parseFloat(document.getElementById('otherReturn').value) || 0;
     const capitalGainTaxRate = parseFloat(document.getElementById('capitalGainTaxRate').value) || 0;
@@ -196,8 +209,8 @@ function calculateRetirement() {
     const pfPensionFund = calculatePfPensionFund(currentSalary, pfReturn, yearsTillRetirement, growthRate);
     const pfCorpus = calculatePfCorpus(currentSalary, pfContribution, currentPfBalance, pfReturn, yearsTillRetirement, growthRate);
     const ppfCorpus = calculateFutureValue(currentPpfBalance,ppfContribution*12, ppfReturn, yearsTillRetirement);
-    const epsPension = calculateEpsPension(pensionableSalary, yearsOfService);
-    const npsCorpus = calculateNpsCorpus(npsContribution, npsReturn, yearsTillRetirement);
+    const epsPension = calculateEpsPension(pfContribution, pensionableSalary, yearsOfService);
+    const npsCorpus = calculateNpsCorpus(currentNpsBalance, npsContribution, npsReturn, yearsTillRetirement);
     const npsAnnuityCorpus = Math.ceil(npsCorpus * npsAnnuity);
     const npsLumpSum = Math.ceil(npsCorpus * (1 - npsAnnuity));
     const npsPension = calculateNpsPension(npsAnnuityCorpus, annuityReturn);
