@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Self-Service QR Code Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+    <h1>Self-Service UPI QR Code Generator</h1>
+
+    <label for="brandName">Brand Name:</label>
+    <input type="text" id="brandName" placeholder="Tea Tower" value="Tea Tower"><br><br>
+
+    <label for="message">Message:</label>
+    <textarea id="message" rows="3"
+        cols="30">Scan to Pay and Serve Yourself. 10 /Tea or Coffee. Self-Service.</textarea><br><br>
+
+    <label for="upiId">UPI ID:</label>
+    <input type="text" id="upiId" placeholder="your-upi-id@bank"><br><br>
+
+    <label for="amount">Amount:</label>
+    <input type="number" id="amount" placeholder="100"><br><br>
+
+    <button onclick="generateQRCode()">Generate QR Code</button>
+    <br><br>
+
+    <div id="qrcode"></div>
+    <br>
+
+    <button id="downloadPDF" style="display:none;" onclick="downloadPDF()">Download PDF</button>
+
+    <script>
+        function generateQRCode() {
+            // Clear previous QR code
+            document.getElementById("qrcode").innerHTML = "";
+            document.getElementById("downloadPDF").style.display = "none";
+
+            // Get input values
+            const upiID = document.getElementById('upiId').value;
+            const amount = document.getElementById('amount').value;
+            const brandName = document.getElementById('brandName').value;
+            const message = document.getElementById('message').value;
+
+            // UPI URL format
+            const upiURL = `upi://pay?pa=${upiID}&am=${amount}&cu=INR&tn=${encodeURIComponent(brandName)}`;
+
+            // Generate QR code
+            new QRCode(document.getElementById("qrcode"), {
+                text: upiURL,
+                width: 256,
+                height: 256,
+            });
+
+            // Show the download PDF button after generating the QR code
+            setTimeout(() => {
+                document.getElementById("downloadPDF").style.display = "block";
+            }, 500);  // Small delay to ensure QR code generation
+        }
+
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Get brand name and message
+            const brandName = document.getElementById('brandName').value;
+            const message = document.getElementById('message').value;
+
+            // Title: Brand Name (Center-aligned and Large)
+            doc.setFontSize(30);
+            doc.setFont(undefined, 'bold');
+            doc.text(brandName, 105, 30, null, null, 'center');  // Center aligned
+
+            // Message (Larger size for clarity)
+            doc.setFontSize(18);
+            doc.setFont(undefined, 'normal');
+            doc.text(message, 105, 50, null, null, 'center');  // Center aligned
+
+            // Add the QR code image from the canvas
+            const qrCanvas = document.querySelector('#qrcode canvas');
+            const imgData = qrCanvas.toDataURL("image/png");
+            doc.addImage(imgData, 'PNG', 30, 60, 150, 150);  // Slight adjustment for placement
+
+            // Save the PDF
+            doc.save(`${brandName}-QRCode.pdf`);
+        }
+    </script>
+</body>
+
+</html>
