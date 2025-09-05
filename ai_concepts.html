@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Fundamentals Navigator</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7f9;
+            color: #333;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .mindmap-container {
+            width: 100%;
+            max-width: 1200px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a237e;
+            text-align: center;
+            margin-bottom: 2rem;
+            border-bottom: 3px solid #e0e0e0;
+            padding-bottom: 1rem;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 1.5rem;
+            margin: 0;
+        }
+
+        .node {
+            position: relative;
+            margin: 0.5rem 0;
+        }
+
+        .node-label {
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.5rem 0;
+            border-radius: 6px;
+        }
+
+        .expandable > .node-label {
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .expandable > .node-label:hover {
+            background-color: #f0f4f7;
+        }
+
+        .node-label span.symbol {
+            margin-right: 10px;
+            font-size: 1.2em;
+            color: #333;
+            width: 1em;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .expandable.open > .node-label > span.symbol {
+            transform: rotate(90deg);
+        }
+
+        .description {
+            font-size: 0.9rem;
+            color: #555;
+            margin-left: 2rem;
+            margin-top: -0.5rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .child-nodes {
+            display: none;
+            border-left: 2px solid #e0e0e0;
+            margin-left: 0.8rem;
+            padding-left: 1rem;
+        }
+
+        .expandable.open > .child-nodes {
+            display: block;
+        }
+        
+        /* Color Coding */
+        .green-concept { color: #28a745; }
+        .yellow-concept { color: #ffc107; }
+        .grey-concept { color: #6c757d; }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            .mindmap-container {
+                padding: 1rem;
+            }
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+            }
+            .node-label {
+                font-size: 1rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="mindmap-container">
+    <h1>AI Fundamentals Navigator</h1>
+    <ul id="mindmap-root">
+        <!-- The mind map will be rendered here by JavaScript -->
+    </ul>
+</div>
+
+<script>
+    const concepts = {
+        "I. The Core 'Brain'🧠: Models & Architectures": {
+            color: "green",
+            children: {
+                "Foundation Models": {
+                    symbol: "►",
+                    color: "green",
+                    children: {
+                        "Large Language Models (LLMs)": { description: "A type of foundation model trained on a massive amount of text data to understand and generate human-like language.", color: "green" },
+                        "Multimodal models": { description: "Models that can process and understand data from multiple modalities, such as text, images, and audio.", color: "green" },
+                        "Autoregressive models": { description: "A type of model that predicts the next item in a sequence based on the preceding items, which can be thought of as filling in the blank at the end of a sentence.", color: "green" }
+                    }
+                },
+                "Model Architecture": {
+                    symbol: "►",
+                    color: "green",
+                    children: {
+                        "Transformer Architecture": {
+                            symbol: "►",
+                            color: "green",
+                            children: {
+                                "Transformer block": { description: "The fundamental building block of the Transformer architecture, composed of a Multi-Head Self-Attention layer and a Feed-Forward Network. Unlike RNNs that process words sequentially, Transformers process an entire sequence of embeddings all at once at each layer.", color: "green" },
+                                "Attention": { description: "A mechanism in neural networks that allows the model to weigh the importance of different parts of the input sequence.", color: "green" },
+                                "Multi-query attention": { description: "A variation of the attention mechanism designed to improve the efficiency of models during inference.", color: "green" },
+                                "Mixture-of-experts (MoE) models": { description: "A type of neural network that uses multiple 'expert' sub-networks and a gating network to route inputs to the most relevant expert.", color: "green" }
+                            }
+                        },
+                        "Recurrent Neural Networks (RNNs)": { description: "A class of neural networks where connections between nodes form a directed graph along a temporal sequence, often used for time series or sequential data.", color: "grey" },
+                        "Masked Language Models (MLMs)": { description: "A type of language model that predicts a masked or hidden token in a sequence based on its surrounding context. This can be thought of as filling in a blank in the middle of a sentence.", color: "grey" },
+                        "Parameters vs. Neurons": { description: "Neurons are the processing units. Parameters are the numerical weights and biases that define the strength of the connections between neurons. More parameters mean more learning capacity.", color: "green" }
+                    }
+                }
+            }
+        },
+        "II. How We 'Teach' the AI: Training & Data": {
+            color: "green",
+            children: {
+                "Data Engineering": {
+                    symbol: "►",
+                    color: "green",
+                    children: {
+                        "Data Curation": { description: "The process of organizing, annotating, and managing data to ensure its quality and suitability for AI model training.", color: "green" },
+                        "Data Quality": { description: "The measure of data's fitness for a particular use, including its accuracy, completeness, and consistency.", color: "green" },
+                        "Data deduplication": { description: "The process of removing duplicate copies of data to improve model training efficiency and prevent data contamination.", color: "green" },
+                        "AI-Powered Data Synthesis": { description: "The use of AI models to generate new, synthetic data for training or testing purposes, often to address data scarcity or privacy concerns.", color: "yellow" }
+                    }
+                },
+                "Training & Adaptation": {
+                    symbol: "►",
+                    color: "green",
+                    children: {
+                        "Self-supervised learning": { description: "The process where a model learns from unstructured data by creating its own learning signals, such as predicting the next word in a sequence.", color: "green" },
+                        "Backpropagation": { description: "The core algorithm for training. It works backward from an error in the model's output to adjust each parameter's value to reduce the error for the next training step.", color: "green" },
+                        "Fine-tuning": {
+                            symbol: "►",
+                            color: "green",
+                            children: {
+                                "Supervised Finetuning (SFT)": { description: "The process of taking a pre-trained model and further training it on a smaller, specific, labeled dataset to adapt it to a particular task.", color: "green" },
+                                "Preference Finetuning": { description: "A finetuning method that uses human preferences or rankings of model outputs to align the model's behavior with desired outcomes.", color: "green" }
+                            }
+                        },
+                        "Parameter-Efficient Fine-tuning (PEFT)": {
+                            symbol: "►",
+                            color: "green",
+                            children: {
+                                "LoRA": { description: "Low-Rank Adaptation, a PEFT method that injects small, trainable matrices into the model's layers instead of finetuning all parameters.", color: "green" },
+                                "Adapter-based methods": { description: "A family of PEFT techniques that involve adding small, trainable 'adapter' modules to a pre-trained model.", color: "green" }
+                            }
+                        },
+                        "RLHF (Reinforcement Learning from Human Feedback)": { description: "A method that uses human ratings or preferences to create a reward model, which then guides the model's training via reinforcement learning.", color: "green" },
+                        "Transfer Learning": { description: "A machine learning method where a model developed for a task is reused as a starting point for a model on a second task.", color: "green" }
+                    }
+                }
+            }
+        },
+        "III. How We 'Talk' to the AI: Interaction & Deployment": {
+            color: "green",
+            children: {
+                "Prompting & Interaction": {
+                    symbol: "►",
+                    color: "green",
+                    children: {
+                        "Prompting vs. Prompt Engineering": { description: "Prompting is the act of giving a model an input. Prompt engineering is the deliberate practice of crafting and refining that input to get a specific and desired output.", color: "green" },
+                        "Chain-of-thought prompting": { description: "A prompting technique that encourages an LLM to break down a complex problem into a series of intermediate steps.", color: "green" },
+                        "In-context learning": {
+                            symbol: "►",
+                            color: "green",
+                            children: {
+                                "Zero-shot learning": { description: "The ability of a model to perform a task it has not been explicitly trained on, relying on its general understanding from pre-training.", color: "green" },
+                                "Few-shot learning": { description: "A technique where a model is given a few examples in the prompt to guide it in performing a task.", color: "green" }
+                            }
+                        }
+                    }
+                },
+                "Retrieval-Augmented Generation (RAG)": {
+                    symbol: "►",
+                    color: "green",
+                    children: {
+                        "Overview": { description: "A system that uses an external embedding database to provide an LLM with up-to-date and domain-specific information, acting as an 'external brain'. LLMs are closed systems with stale knowledge; RAG provides a dynamic source of external, up-to-date information.", color: "green" },
+                        "Vector Database": { description: "A database designed to store, manage, and search for vector embeddings. The LLM never 'sees' the numerical embedding used for searching; it only receives the retrieved human-readable text to generate a grounded response.", color: "green" },
+                        "Embedding": { description: "A numerical representation of a word, phrase, or other data type that captures its semantic meaning and relationships.", color: "green" },
+                        "Retrieval algorithms": { description: "Algorithms used to search and retrieve relevant documents or information from a knowledge source, often based on semantic similarity.", color: "green" }
+                    }
+                },
+                "AI Agents": {
+                    symbol: "►",
+                    color: "green",
+                    children: {
+                        "Agents": { description: "AI systems that can reason, plan, and take actions in an environment to achieve a goal.", color: "green" },
+                        "Tool use": { description: "The ability of an AI agent to use external tools, such as an API or a calculator, to perform tasks. When a user request requires an external action, the LLM generates a structured, machine-readable function call instead of just human-readable text. The most robust method for this is a dedicated Function Calling API, which is more reliable than older, prompt-based approaches.", color: "green" },
+                        "Self-correction": { description: "The ability of a model to identify errors in its own output and revise them, often guided by a prompt or internal reasoning.", color: "yellow" }
+                    }
+                },
+                "AI Engineering & Infrastructure": {
+                    symbol: "►",
+                    color: "green",
+                    children: {
+                        "AI Pipeline Orchestration": { description: "The process of managing and automating the workflow of an AI system, from data ingestion to model deployment and monitoring.", color: "green" },
+                        "AI Interface": { description: "The user-facing component of an AI system, including the design and implementation of how users interact with the AI.", color: "green" },
+                        "Accelerators": { description: "Hardware components designed to accelerate AI workloads, such as GPUs, TPUs, and specialized AI chips.", color: "green" }
+                    }
+                }
+            }
+        },
+        "IV. How We 'Check' the AI's Work: Evaluation": {
+            color: "green",
+            children: {
+                "Evaluation Metrics": {
+                    symbol: "►",
+                    color: "green",
+                    children: {
+                        "Evaluation Metrics": { description: "Quantitative measures used to assess the performance and quality of an AI model or system.", color: "green" },
+                        "Factual consistency": { description: "A metric that measures whether a model's generated response is consistent with the information provided in its source documents.", color: "green" },
+                        "Perplexity": { description: "A measure of how well a probability model predicts a sample. Lower perplexity indicates a better model.", color: "grey" }
+                    }
+                },
+                "Human & AI-Assisted Evaluation": {
+                    symbol: "►",
+                    color: "green",
+                    children: {
+                        "AI as a Judge": { description: "The use of an AI model to evaluate the output of another AI model or system, often used in preference-based finetuning.", color: "green" },
+                        "Human Feedback": { description: "The use of human ratings or preferences to guide the training and improvement of an AI model.", color: "green" },
+                        "Pairwise comparison": { description: "An evaluation method where two model outputs are presented side-by-side for a human or AI to determine which is better.", color: "green" }
+                    }
+                }
+            }
+        },
+        "V. Making the AI Smarter & Faster: Optimization": {
+            color: "green",
+            children: {
+                "Inference Optimization": {
+                    symbol: "►",
+                    color: "green",
+                    children: {
+                        "Quantization": { description: "A technique that reduces the precision of numbers used in a model (e.g., from 32-bit to 8-bit) to reduce memory and increase speed.", color: "green" },
+                        "Model compression": { description: "Techniques used to reduce the size of a model, such as pruning or knowledge distillation, to make it more efficient.", color: "green" },
+                        "Batching": { description: "A technique of grouping multiple inference requests together to be processed simultaneously by the model to improve throughput.", color: "green" },
+                        "Caching (e.g., KV cache)": { description: "The practice of storing computed key and value vectors during inference to avoid re-computation for subsequent tokens.", color: "green" },
+                        "Parallelism": { description: "Strategies for distributing a model's workload across multiple devices (e.g., GPUs) to speed up training or inference.", color: "green" }
+                    }
+                },
+                "Training Optimization": {
+                    symbol: "►",
+                    color: "green",
+                    children: {
+                        "Automatic Mixed Precision (AMP)": { description: "A technique that uses both 16-bit and 32-bit floating-point numbers during training to speed up computation and reduce memory usage.", color: "green" },
+                        "Training quantization": { description: "The process of quantizing a model during training to enable faster and more memory-efficient training.", color: "green" }
+                    }
+                },
+                "Memory & Compute": {
+                    symbol: "►",
+                    color: "green",
+                    children: {
+                        "Computational bottlenecks": { description: "The parts of a system that are constrained by processing speed and limit overall performance.", color: "green" },
+                        "Memory bottlenecks": { description: "The parts of a system that are constrained by memory size or bandwidth and limit overall performance.", color: "green" }
+                    }
+                }
+            }
+        }
+    };
+
+    function renderMindMap(data, parentElement) {
+        for (const key in data) {
+            const nodeData = data[key];
+            const li = document.createElement('li');
+            li.className = 'node';
+
+            const labelDiv = document.createElement('div');
+            labelDiv.className = `node-label ${nodeData.color}-concept`;
+
+            // If the node has children, it's an expandable parent node
+            if (nodeData.children) {
+                const symbolSpan = document.createElement('span');
+                symbolSpan.className = 'symbol';
+                symbolSpan.textContent = "►";
+                labelDiv.appendChild(symbolSpan);
+                li.classList.add('expandable');
+                labelDiv.addEventListener('click', () => {
+                    li.classList.toggle('open');
+                });
+            } else {
+                // If it's a leaf node without children, add a simple bullet point or spacing
+                const spacerSpan = document.createElement('span');
+                spacerSpan.className = 'symbol';
+                spacerSpan.textContent = '•'; // Or ' ' for just spacing
+                labelDiv.appendChild(spacerSpan);
+            }
+
+            const textSpan = document.createElement('span');
+            textSpan.textContent = key;
+            labelDiv.appendChild(textSpan);
+
+            li.appendChild(labelDiv);
+
+            // If the node has a description, add it to the list item
+            if (nodeData.description) {
+                const descriptionDiv = document.createElement('div');
+                descriptionDiv.className = 'description';
+                descriptionDiv.textContent = nodeData.description;
+                li.appendChild(descriptionDiv);
+            }
+
+            // If the node has children, render them recursively
+            if (nodeData.children) {
+                const ul = document.createElement('ul');
+                ul.className = 'child-nodes';
+                li.appendChild(ul);
+                renderMindMap(nodeData.children, ul);
+            }
+
+            parentElement.appendChild(li);
+        }
+    }
+
+    window.onload = function() {
+        const rootElement = document.getElementById('mindmap-root');
+        renderMindMap(concepts, rootElement);
+    };
+</script>
+
+</body>
+</html>
