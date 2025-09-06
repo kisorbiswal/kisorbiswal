@@ -28,16 +28,54 @@
             box-sizing: border-box;
         }
 
+        /* New: Flexbox header for responsive layout */
+        .header-and-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-bottom: 3px solid #e0e0e0;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
         h1 {
             font-size: 2.5rem;
             font-weight: 700;
             color: #1a237e;
             text-align: center;
-            margin-bottom: 2rem;
-            border-bottom: 3px solid #e0e0e0;
-            padding-bottom: 1rem;
+            margin: 0;
+            padding-right: 15px; /* Add some space for the button on large screens */
         }
-
+        
+        .settings-container {
+            position: absolute;
+            top: 2.2rem;
+            right: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        /* New: Media query to fix overlap on small screens */
+        @media (max-width: 768px) {
+            .header-and-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            h1 {
+                text-align: center;
+                margin-bottom: 1rem;
+            }
+            .settings-container {
+                position: static;
+                margin-top: 1rem;
+                display: flex;
+                justify-content: center;
+                width: 100%;
+            }
+        }
+        
         ul {
             list-style-type: none;
             padding-left: 1.5rem;
@@ -86,8 +124,17 @@
             margin-left: 2rem;
             margin-top: -0.5rem;
             padding-bottom: 0.5rem;
+            display: none; /* Descriptions are hidden by default */
         }
-
+        
+        /* New: Corrected CSS to show descriptions when an expandable node is open */
+        .expandable.open > .description {
+            display: block;
+        }
+        .expandable.open .node > .description {
+            display: block;
+        }
+        
         .child-nodes {
             display: none;
             border-left: 2px solid #e0e0e0;
@@ -120,17 +167,68 @@
                 font-size: 1rem;
             }
         }
+        
+        /* Back to Top Button */
+        #backToTopBtn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 99;
+            font-size: 18px;
+            border: none;
+            outline: none;
+            background-color: #1a237e;
+            color: white;
+            cursor: pointer;
+            padding: 12px 15px;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        #backToTopBtn:hover {
+            background-color: #3943b1;
+            transform: scale(1.1);
+        }
+        
+        /* Dynamic Expand/Collapse Button */
+        #expandCollapseBtn {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background-color: #f4f7f9;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        #expandCollapseBtn:hover {
+            background-color: #e0e0e0;
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <div class="mindmap-container">
-    <h1>AI Concepts at a Glance</h1>
+    <div class="header-and-controls">
+        <h1>AI Concepts at a Glance</h1>
+        <div class="settings-container">
+            <button id="expandCollapseBtn">
+                <span id="expandCollapseSymbol" class="symbol">►</span>
+                <span id="expandCollapseText">Expand</span>
+            </button>
+        </div>
+    </div>
     <ul id="mindmap-root">
-        <!-- The mind map will be rendered here by JavaScript -->
-    </ul>
+        </ul>
 </div>
+
+<button onclick="topFunction()" id="backToTopBtn" title="Go to top">↑</button>
 
 <script>
     const concepts = {
@@ -322,32 +420,31 @@
 
             const labelDiv = document.createElement('div');
             labelDiv.className = `node-label ${nodeData.color}-concept`;
-
-            // If the node has children, it's an expandable parent node
+            
             if (nodeData.children) {
                 const symbolSpan = document.createElement('span');
                 symbolSpan.className = 'symbol';
                 symbolSpan.textContent = "►";
                 labelDiv.appendChild(symbolSpan);
                 li.classList.add('expandable');
+                
+                // Click handler for expandable nodes
                 labelDiv.addEventListener('click', () => {
                     li.classList.toggle('open');
                 });
             } else {
-                // If it's a leaf node without children, add a simple bullet point or spacing
                 const spacerSpan = document.createElement('span');
                 spacerSpan.className = 'symbol';
-                spacerSpan.textContent = '•'; // Or ' ' for just spacing
+                spacerSpan.textContent = '•'; 
                 labelDiv.appendChild(spacerSpan);
             }
-
+            
             const textSpan = document.createElement('span');
             textSpan.textContent = key;
             labelDiv.appendChild(textSpan);
 
             li.appendChild(labelDiv);
 
-            // If the node has a description, add it to the list item
             if (nodeData.description) {
                 const descriptionDiv = document.createElement('div');
                 descriptionDiv.className = 'description';
@@ -355,7 +452,6 @@
                 li.appendChild(descriptionDiv);
             }
 
-            // If the node has children, render them recursively
             if (nodeData.children) {
                 const ul = document.createElement('ul');
                 ul.className = 'child-nodes';
@@ -370,6 +466,43 @@
     window.onload = function() {
         const rootElement = document.getElementById('mindmap-root');
         renderMindMap(concepts, rootElement);
+        
+        const expandCollapseBtn = document.getElementById('expandCollapseBtn');
+        const expandCollapseSymbol = document.getElementById('expandCollapseSymbol');
+        const expandCollapseText = document.getElementById('expandCollapseText');
+        let isExpanded = false;
+        
+        const mybutton = document.getElementById("backToTopBtn");
+        window.onscroll = function() {
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+        };
+        
+        window.topFunction = function() {
+            document.body.scrollTop = 0; 
+            document.documentElement.scrollTop = 0;
+        };
+        
+        expandCollapseBtn.addEventListener('click', () => {
+            const allExpandableNodes = document.querySelectorAll('.expandable');
+            if (isExpanded) {
+                allExpandableNodes.forEach(node => {
+                    node.classList.remove('open');
+                });
+                expandCollapseSymbol.textContent = '►';
+                expandCollapseText.textContent = 'Expand';
+            } else {
+                allExpandableNodes.forEach(node => {
+                    node.classList.add('open');
+                });
+                expandCollapseSymbol.textContent = '▼';
+                expandCollapseText.textContent = 'Collapse';
+            }
+            isExpanded = !isExpanded;
+        });
     };
 </script>
 
