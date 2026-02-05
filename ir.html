@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insulin Resistance Clinical Screening Checklist</title>
+<style>
+body { font-family: Arial, sans-serif; line-height: 1.6; }
+h2 { background:#f2f2f2; padding:8px; }
+label { display:block; margin-left:10px; }
+#selectedBox {
+  margin-top:30px;
+  padding:15px;
+  border:2px solid #444;
+  background:#fafafa;
+}
+</style>
+</head>
+<body>
+
+<h1>Insulin Resistance Screening Checklist</h1>
+<p>Use for preliminary clinical screening only. Not diagnostic.</p>
+
+<h2>High Probability Factors</h2>
+<label><input type="checkbox" onchange="updateSelected()"> Central obesity / high waist circumference</label>
+<label><input type="checkbox" onchange="updateSelected()"> Sedentary lifestyle / low physical activity</label>
+<label><input type="checkbox" onchange="updateSelected()"> High refined carbohydrate diet</label>
+<label><input type="checkbox" onchange="updateSelected()"> High sugar / sweetened beverage intake</label>
+<label><input type="checkbox" onchange="updateSelected()"> Poor sleep duration or quality</label>
+<label><input type="checkbox" onchange="updateSelected()"> Chronic psychological stress</label>
+<label><input type="checkbox" onchange="updateSelected()"> Family history of diabetes</label>
+<label><input type="checkbox" onchange="updateSelected()"> PCOS or menstrual irregularity</label>
+<label><input type="checkbox" onchange="updateSelected()"> Low muscle mass / lack of strength training</label>
+<label><input type="checkbox" onchange="updateSelected()"> Visceral fat / thin-fat phenotype</label>
+
+<h2>Moderate Probability Factors</h2>
+<label><input type="checkbox" onchange="updateSelected()"> Vitamin D deficiency</label>
+<label><input type="checkbox" onchange="updateSelected()"> Magnesium deficiency</label>
+<label><input type="checkbox" onchange="updateSelected()"> Fatty liver (NAFLD/MASLD)</label>
+<label><input type="checkbox" onchange="updateSelected()"> Dyslipidemia</label>
+<label><input type="checkbox" onchange="updateSelected()"> Hypertension</label>
+<label><input type="checkbox" onchange="updateSelected()"> Sleep apnea symptoms</label>
+<label><input type="checkbox" onchange="updateSelected()"> Shift work / circadian disruption</label>
+<label><input type="checkbox" onchange="updateSelected()"> Ultra-processed food intake</label>
+<label><input type="checkbox" onchange="updateSelected()"> Gut dysbiosis / GI issues</label>
+<label><input type="checkbox" onchange="updateSelected()"> Hypothyroidism</label>
+<label><input type="checkbox" onchange="updateSelected()"> Depression / anxiety</label>
+<label><input type="checkbox" onchange="updateSelected()"> Alcohol overuse</label>
+
+<h2>Lower Probability Factors</h2>
+<label><input type="checkbox" onchange="updateSelected()"> Smoking / passive smoke</label>
+<label><input type="checkbox" onchange="updateSelected()"> Chronic inflammation / autoimmune disease</label>
+<label><input type="checkbox" onchange="updateSelected()"> Chronic infections</label>
+<label><input type="checkbox" onchange="updateSelected()"> Oral contraceptive or hormonal therapy</label>
+<label><input type="checkbox" onchange="updateSelected()"> Antidepressant / antipsychotic medication</label>
+<label><input type="checkbox" onchange="updateSelected()"> Corticosteroid exposure</label>
+<label><input type="checkbox" onchange="updateSelected()"> Gestational diabetes history</label>
+<label><input type="checkbox" onchange="updateSelected()"> Chronic kidney or liver disease</label>
+<label><input type="checkbox" onchange="updateSelected()"> Long COVID history</label>
+<label><input type="checkbox" onchange="updateSelected()"> Low birth weight / catch-up growth</label>
+
+<h2>Rare Causes</h2>
+<label><input type="checkbox" onchange="updateSelected()"> Cushing’s syndrome</label>
+<label><input type="checkbox" onchange="updateSelected()"> Acromegaly</label>
+<label><input type="checkbox" onchange="updateSelected()"> Hyperprolactinemia</label>
+<label><input type="checkbox" onchange="updateSelected()"> Genetic insulin receptor disorders</label>
+<label><input type="checkbox" onchange="updateSelected()"> Lipodystrophy</label>
+<label><input type="checkbox" onchange="updateSelected()"> Organ transplantation</label>
+<label><input type="checkbox" onchange="updateSelected()"> Severe trauma / burns</label>
+<label><input type="checkbox" onchange="updateSelected()"> Chemotherapy / immunosuppressants</label>
+<label><input type="checkbox" onchange="updateSelected()"> Heavy metal / toxin exposure</label>
+<label><input type="checkbox" onchange="updateSelected()"> Mitochondrial disorders</label>
+
+<div id="selectedBox">
+<h2>Selected Factors</h2>
+<ul id="selectedList"></ul>
+</div>
+
+<script>
+function updateSelected() {
+  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+  const list = document.getElementById('selectedList');
+  list.innerHTML = "";
+
+  checkboxes.forEach(cb => {
+    if (cb.checked) {
+      const li = document.createElement("li");
+      li.textContent = cb.parentElement.textContent.trim();
+      list.appendChild(li);
+    }
+  });
+}
+</script>
+
+</body>
+</html>
